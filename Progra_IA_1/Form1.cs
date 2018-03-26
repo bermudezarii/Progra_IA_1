@@ -25,14 +25,20 @@ namespace Progra_IA_1
 
 		// board game info (: 
 		// a is the size of each square
-		int a = 20;
+		int a = 40;
 		// m is the total columns the player wants in the board
 		int m = 20;
 		// n is the total rows the player wants in the board
-		int n = 20; 
+		int n = 20;
+		// actual position in axe x 
+		int axe_x = 0;
+		// actual position in axe y 
+		int axe_y = 0;
 		public Form1()
 		{
-			InitializeComponent();	
+			InitializeComponent();
+			panel1.VerticalScroll.Enabled = true;
+			panel1.VerticalScroll.Visible = true; 
 		}
 
 		private int from_number_str_to_int(string str) {
@@ -56,20 +62,113 @@ namespace Progra_IA_1
 			return x; 
 		}
 
-		
+		private void check_position() {
+
+		}
+
+		private void initial_position(object sender, SpeechRecognizedEventArgs e) {
+			Console.WriteLine("INITIAL POSITION");
+			if (e.Result.Text == "arriba")
+			{
+				synthesizer.SpeakAsync("iniciando el juego");
+
+			}
+			else if (e.Result.Text == "abajo")
+			{
+				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+			}
+			else if (e.Result.Text == "izquierda")
+			{
+				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+			}
+			else if (e.Result.Text == "derecha")
+			{
+				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+			}
+			else if (e.Result.Text == "listo")
+			{
+				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+			}
+		}
+
+		private void set_board() {
+			this.board.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+			board.RowStyles.Clear();
+			board.ColumnStyles.Clear();
+			board.AutoScroll = true;
+			board.AutoSize = true;
+			for (int i = 0; i < m; i++) {
+				Console.WriteLine(i);
+				board.ColumnCount++;
+				this.board.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, a)); 
+			}
+			for (int i = 0; i < n; i++)
+			{
+				Console.WriteLine(i);
+				board.RowCount++;
+				this.board.RowStyles.Add(new RowStyle(SizeType.Absolute, a));
+			}
+			
+			Console.WriteLine("ya lo setie ): "); 
+
+			
+		}
+
+		private void row_size_getter(object sender, SpeechRecognizedEventArgs e) {
+			int number = from_number_str_to_int(e.Result.Text);
+			if (number < 3 && number != -1)
+			{
+				synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
+			}
+			else if (number >= 3)
+			{
+				synthesizer.SpeakAsync("La cantidad de filas son:");
+				synthesizer.SpeakAsync(number.ToString());
+				n = number;
+				set_board(); 
+				synthesizer.SpeakAsync("Cuál es la ubicación que desea para iniciar el camino?");
+				//recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
+			}
+		}
+
+		private void column_size_getter(object sender, SpeechRecognizedEventArgs e) {
+			int number = from_number_str_to_int(e.Result.Text);
+			if (number < 3 && number != -1)
+			{
+				synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
+			}
+			else if (number >= 3)
+			{
+				synthesizer.SpeakAsync("La cantidad de columnas son:");
+				synthesizer.SpeakAsync(number.ToString());
+				m = number;
+				synthesizer.SpeakAsync("Cuántas filas desea en el tablero?");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
+			}
+		}
 
 		private void square_pixel_size_getter(object sender, SpeechRecognizedEventArgs e) {
 			/*string str = e.Result.Text; 
 			string[] words = str.Split(new char[0]);*/
 			int number = from_number_str_to_int(e.Result.Text);
-			if (number < 20 && number != 1)
+			Console.WriteLine("square pixel"); 
+			if (number < 20 && number != -1)
 			{
-				synthesizer.SpeakAsync("El número debe ser mayor o igual a 20"); 
+				synthesizer.SpeakAsync("El número debe ser mayor o igual a 20");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
 			}
 			else if (number >= 20) {
 				synthesizer.SpeakAsync("El número del tamaño del cuadro es");
 				synthesizer.SpeakAsync(number.ToString());
-				a = number; 
+				a = number;
+				synthesizer.SpeakAsync("Cuántas columnas desea en el tablero?");
+				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
 			}
 		}
 
@@ -87,6 +186,7 @@ namespace Progra_IA_1
 			}
 		}
 
+		
 
 		private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
 		{
@@ -94,26 +194,15 @@ namespace Progra_IA_1
 			
 			if (e.Result.Text == "iniciar")
 			{
-				synthesizer.SpeakAsync("Desea utilizar la configuración prestablecida para el juego, diga si o no. ]");
-				label1.Text = "it works";
+				synthesizer.SpeakAsync("Desea utilizar la configuración prestablecida para el juego, diga correcto o no. ]");
 				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(start_decider);
 			}
 			else if (e.Result.Text == "terminar") {
 				this.Close(); 
 			}
-			else {
-				label1.Text = e.Result.Text;
-			}
+
 		}
 
-
-		
-
-		private void button1_Click(object sender, EventArgs e)
-		{
-			recognizer.RecognizeAsync(RecognizeMode.Multiple);
-			label1.Text = "Activo"; 
-		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -126,6 +215,17 @@ namespace Progra_IA_1
 			synthesizer.SpeakAsync("Bienvenido al juego, para jugar diga iniciar, o terminar para cerrar la aplicación");
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
 			Console.WriteLine("123123");
+			
+		}
+
+		private void board_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void panel1_Paint(object sender, PaintEventArgs e)
+		{
+			
 		}
 	}
 }
