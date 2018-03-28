@@ -132,8 +132,10 @@ namespace Progra_IA_1
 				n = number;
 				set_board(); 
 				synthesizer.SpeakAsync("Cuál es la ubicación que desea para iniciar el camino?");
-				//recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
-			}
+                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
+                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
+                //recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
+            }
 		}
 
 		private void column_size_getter(object sender, SpeechRecognizedEventArgs e) {
@@ -149,7 +151,8 @@ namespace Progra_IA_1
 				synthesizer.SpeakAsync(number.ToString());
 				m = number;
 				synthesizer.SpeakAsync("Cuántas filas desea en el tablero?");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
+                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+                recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
 			}
 		}
 
@@ -168,7 +171,8 @@ namespace Progra_IA_1
 				synthesizer.SpeakAsync(number.ToString());
 				a = number;
 				synthesizer.SpeakAsync("Cuántas columnas desea en el tablero?");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
+                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(start_decider);
+                recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
 			}
 		}
 
@@ -182,7 +186,8 @@ namespace Progra_IA_1
 			else if (e.Result.Text == "no")
 			{
 				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
+                recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
 			}
 		}
 
@@ -191,8 +196,7 @@ namespace Progra_IA_1
 		private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
 		{
 			Console.WriteLine("Quak");
-			
-			if (e.Result.Text == "iniciar")
+            if (e.Result.Text == "iniciar")
 			{
 				synthesizer.SpeakAsync("Desea utilizar la configuración prestablecida para el juego, diga correcto o no. ]");
 				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(start_decider);
