@@ -210,7 +210,50 @@ namespace Progra_IA_1
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			Console.WriteLine("input device recognised.......");
+            /*****************PRUEBA DE A ESTRELLA, LUEGO SE QUITA**************************/
+
+            List<List<Node>> labyrinth = new List<List<Node>>();
+
+            List<Node> nodes = new List<Node>
+            {
+                new Node(0, 0, true),
+                new Node(0, 1, true),
+                new Node(0, 2, true),
+                new Node(0, 3, true)
+            };
+
+            labyrinth.Add(nodes);
+            nodes = new List<Node>
+            {
+                new Node(1, 0, true),
+                new Node(1, 1, false),
+                new Node(1, 2, true),
+                new Node(1, 3, false)
+            };
+            labyrinth.Add(nodes);
+
+            nodes = new List<Node>
+            {
+                new Node(2, 0, true),
+                new Node(2, 1, true),
+                new Node(2, 2, false),
+                new Node(2, 3, true)
+            };
+            labyrinth.Add(nodes);
+
+            A_star a_star = new A_star(labyrinth);
+            Stack<Node> path = a_star.Find_path(0, 3, 2, 0);
+            int size_path = path.Count;
+            for(int i = 0; i < size_path; i++)
+            {
+                Node n = path.Pop();
+                Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
+            }
+
+
+
+            /*********************TERMINA PRUEBA DE A ESTRELLA******************************/
+            Console.WriteLine("input device recognised.......");
 			recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
 			synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult, 0,CultureInfo.GetCultureInfo("es-ES"));
 			Grammar grammar = new DictationGrammar();

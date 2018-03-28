@@ -8,52 +8,51 @@ namespace Progra_IA_1
 {
     class Node
     {
-        private bool is_accessible;
-        private int world_position_X;
-        private int world_position_Y;
+        public static int Node_size = 30;
+        public Node Parent { get; set; }
 
-        public Node(bool is_accessible, int world_position_X, int world_position_Y)
-        {
-            this.is_accessible = is_accessible;
-            this.world_position_X = world_position_X;
-            this.world_position_Y = world_position_Y;
-        }
+        public int Position_X { get; set; }
+        public int Position_Y { get; set; }
 
-        public bool Is_accessible
+        public int Center_X
         {
             get
             {
-                return is_accessible;
-            }
-            set
-            {
-                is_accessible = value;
+                return Position_X + Node_size / 2;
             }
         }
 
-        public int World_position_X
+        public int Center_Y
         {
             get
             {
-                return world_position_X;
-            }
-            set
-            {
-                world_position_X = value;
+                return Position_Y + Node_size / 2;
             }
         }
 
-        public int World_position_Y
+        public float Distance_target { get; set; }
+
+        public float Real_cost { get; set; }
+        public float F_cost
         {
             get
             {
-                return world_position_Y;
-            }
-            set
-            {
-                world_position_Y = value;
+                if (Distance_target != -1 && Real_cost != -1)
+                    return Distance_target + Real_cost;
+                else
+                    return -1;
             }
         }
 
+        public bool Traversable { get; set; }
+        public Node(int position_X, int position_Y, bool traversable)
+        {
+            Parent = null;
+            Position_X = position_X;
+            Position_Y = position_Y;
+            Distance_target = -1;
+            Real_cost = 1;
+            Traversable = traversable;
+        }
     }
 }
