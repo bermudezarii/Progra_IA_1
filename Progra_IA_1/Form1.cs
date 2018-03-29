@@ -227,7 +227,7 @@ namespace Progra_IA_1
             {
                 new Node(1, 0, true),
                 new Node(1, 1, false),
-                new Node(1, 2, true),
+                new Node(1, 2, false),
                 new Node(1, 3, false)
             };
             labyrinth.Add(nodes);
@@ -241,18 +241,21 @@ namespace Progra_IA_1
             };
             labyrinth.Add(nodes);
 
-            A_star a_star = new A_star(labyrinth);
-            Stack<Node> path = a_star.Find_path(0, 3, 2, 0);
+            A_star a_star = new A_star(labyrinth, true, 30);
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            Stack<Node> path = a_star.Find_path(2, 0, 0, 3);
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Total Time: " + elapsedMs + " ms");
             int size_path = path.Count;
             for(int i = 0; i < size_path; i++)
             {
                 Node n = path.Pop();
                 Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
             }
-
-
-
             /*********************TERMINA PRUEBA DE A ESTRELLA******************************/
+
+
             Console.WriteLine("input device recognised.......");
 			recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
 			synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult, 0,CultureInfo.GetCultureInfo("es-ES"));
