@@ -27,13 +27,21 @@ namespace Progra_IA_1
 		// a is the size of each square
 		int a = 40;
 		// m is the total columns the player wants in the board
-		int m = 20;
+		int m = 5;
 		// n is the total rows the player wants in the board
-		int n = 20;
+		int n = 5;
 		// actual position in axe x 
 		int axe_x = 0;
 		// actual position in axe y 
 		int axe_y = 0;
+
+		//flags for speech recognition, when they are = 1, they recognize the words related to that part
+		int r_init = 0;
+		int r_pre = 0; // prestablished parameters
+		int r_col = 0;
+		int r_row = 0;
+		int r_squ = 0; // means square
+		int r_rea = 0; // means ready
 		public Form1()
 		{
 			InitializeComponent();
@@ -76,24 +84,27 @@ namespace Progra_IA_1
 			else if (e.Result.Text == "abajo")
 			{
 				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+				
 			}
 			else if (e.Result.Text == "izquierda")
 			{
 				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+				
 			}
 			else if (e.Result.Text == "derecha")
 			{
 				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+				
 			}
 			else if (e.Result.Text == "listo")
 			{
 				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
+				
 			}
 		}
+
+
+		
 
 		private void set_board() {
 			this.board.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
@@ -112,98 +123,120 @@ namespace Progra_IA_1
 				board.RowCount++;
 				this.board.RowStyles.Add(new RowStyle(SizeType.Absolute, a));
 			}
-			
+			this.board.ResumeLayout();
+			board.AutoSize = true;
+			this.board.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			Console.WriteLine("ya lo setie ): "); 
 
 			
-		}
-
-		private void row_size_getter(object sender, SpeechRecognizedEventArgs e) {
-			int number = from_number_str_to_int(e.Result.Text);
-			if (number < 3 && number != -1)
-			{
-				synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
-			}
-			else if (number >= 3)
-			{
-				synthesizer.SpeakAsync("La cantidad de filas son:");
-				synthesizer.SpeakAsync(number.ToString());
-				n = number;
-				set_board(); 
-				synthesizer.SpeakAsync("Cuál es la ubicación que desea para iniciar el camino?");
-                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
-                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
-                //recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
-            }
-		}
-
-		private void column_size_getter(object sender, SpeechRecognizedEventArgs e) {
-			int number = from_number_str_to_int(e.Result.Text);
-			if (number < 3 && number != -1)
-			{
-				synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
-			}
-			else if (number >= 3)
-			{
-				synthesizer.SpeakAsync("La cantidad de columnas son:");
-				synthesizer.SpeakAsync(number.ToString());
-				m = number;
-				synthesizer.SpeakAsync("Cuántas filas desea en el tablero?");
-                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
-                recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(row_size_getter);
-			}
-		}
-
-		private void square_pixel_size_getter(object sender, SpeechRecognizedEventArgs e) {
-			/*string str = e.Result.Text; 
-			string[] words = str.Split(new char[0]);*/
-			int number = from_number_str_to_int(e.Result.Text);
-			Console.WriteLine("square pixel"); 
-			if (number < 20 && number != -1)
-			{
-				synthesizer.SpeakAsync("El número debe ser mayor o igual a 20");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
-			}
-			else if (number >= 20) {
-				synthesizer.SpeakAsync("El número del tamaño del cuadro es");
-				synthesizer.SpeakAsync(number.ToString());
-				a = number;
-				synthesizer.SpeakAsync("Cuántas columnas desea en el tablero?");
-                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(start_decider);
-                recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(column_size_getter);
-			}
-		}
-
-		private void start_decider(object sender, SpeechRecognizedEventArgs e) {
-			Console.WriteLine("START DECIDER");
-			if (e.Result.Text == "correcto")
-			{
-				synthesizer.SpeakAsync("iniciando el juego");
-
-			}
-			else if (e.Result.Text == "no")
-			{
-				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-                recognizer.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
-                recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(square_pixel_size_getter);
-			}
 		}
 
 		
 
 		private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
 		{
-			Console.WriteLine("Quak");
-            if (e.Result.Text == "iniciar")
+			float confidence = e.Result.Confidence;
+			if (confidence < 0.60)
 			{
-				synthesizer.SpeakAsync("Desea utilizar la configuración prestablecida para el juego, diga correcto o no. ]");
-				recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(start_decider);
+				Console.WriteLine("Low confidence");
+				synthesizer.SpeakAsync("Comando no valido");
+
 			}
-			else if (e.Result.Text == "terminar") {
-				this.Close(); 
+			else if (r_init == 1)
+			{
+				Console.WriteLine("r_init");
+				if (e.Result.Text == "Iniciar")
+				{
+					synthesizer.SpeakAsync("Desea utilizar la configuración prestablecida para el juego, diga si o no.");
+					r_init = 0;
+					r_pre = 1;
+				}
+				else if (e.Result.Text == "Terminar")
+				{
+					this.Close();
+				}
 			}
+			else if (r_pre == 1)
+			{
+				Console.WriteLine("r_pre");
+				if (e.Result.Text == "Si")
+				{
+					synthesizer.SpeakAsync("Iniciando el juego");
+					r_pre = 0;
+					r_rea = 1;
+
+				}
+				else if (e.Result.Text == "No")
+				{
+					synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
+					recognizer.LoadGrammarAsync(new DictationGrammar()); // put all together
+					r_pre = 0;
+					r_squ = 1;
+				}
+			}
+			else if (r_squ == 1)
+			{
+				Console.WriteLine("r_squ");
+				int number = from_number_str_to_int(e.Result.Text);
+				if (number < 20 && number != -1)
+				{
+					synthesizer.SpeakAsync("El número debe ser mayor o igual a 20");
+				}
+				else if (number >= 20)
+				{
+					synthesizer.SpeakAsync("El número del tamaño del cuadro es");
+					synthesizer.SpeakAsync(number.ToString());
+					a = number;
+					synthesizer.SpeakAsync("Cuántas columnas desea en el tablero?");
+					r_squ = 0;
+					r_col = 1; 
+				}
+			}
+			else if (r_col == 1)
+			{
+				Console.WriteLine("r_col");
+				int number = from_number_str_to_int(e.Result.Text);
+				if (number < 3 && number != -1)
+				{
+					synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
+
+				}
+				else if (number >= 3)
+				{
+					synthesizer.SpeakAsync("La cantidad de columnas son:");
+					synthesizer.SpeakAsync(number.ToString());
+					m = number;
+					synthesizer.SpeakAsync("Cuántas filas desea en el tablero?");
+					r_col = 0;
+					r_row = 1; 
+				}
+			}
+			else if (r_row == 1)
+			{
+				Console.WriteLine("r_row");
+				int number = from_number_str_to_int(e.Result.Text);
+				if (number < 3 && number != -1)
+				{
+					synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
+
+				}
+				else if (number >= 3)
+				{
+					synthesizer.SpeakAsync("La cantidad de filas son:");
+					synthesizer.SpeakAsync(number.ToString());
+					n = number;
+					set_board();
+					synthesizer.SpeakAsync("Cuál es la ubicación que desea para iniciar el camino?");
+
+				}
+			}
+			else if (r_rea == 1) { }
+			else
+
+			{
+
+			}
+           
 
 		}
 
@@ -253,16 +286,24 @@ namespace Progra_IA_1
                 Node n = path.Pop();
                 Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
             }
-            /*********************TERMINA PRUEBA DE A ESTRELLA******************************/
+			/*********************TERMINA PRUEBA DE A ESTRELLA******************************/
 
+			Choices commands = new Choices();
+			commands.Add(new string[] {"Iniciar", "Terminar", "Si", "No", "Limpiar", "Arriba", "Abajo", "Izquierda", "Derecha"});
+			GrammarBuilder gBuilder = new GrammarBuilder();
+			gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
+			gBuilder.Append(commands);
+			Grammar grammar = new Grammar(gBuilder);
 
-            Console.WriteLine("input device recognised.......");
+			Console.WriteLine("input device recognised.......");
 			recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
 			synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult, 0,CultureInfo.GetCultureInfo("es-ES"));
-			Grammar grammar = new DictationGrammar();
-			recognizer.LoadGrammar(grammar); // put all together
+			
+			recognizer.LoadGrammarAsync(grammar); // put all together
 			recognizer.RecognizeAsync(RecognizeMode.Multiple);
 			synthesizer.SpeakAsync("Bienvenido al juego, para jugar diga iniciar, o terminar para cerrar la aplicación");
+			r_init = 1;
+			set_board();
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
 			Console.WriteLine("123123");
 			
@@ -276,6 +317,14 @@ namespace Progra_IA_1
 		private void panel1_Paint(object sender, PaintEventArgs e)
 		{
 			
+		}
+
+		private void board_CellPaint_1(object sender, TableLayoutCellPaintEventArgs e)
+		{
+			if ((e.Column + e.Row) % 2 == 1)
+				e.Graphics.FillRectangle(Brushes.Black, e.CellBounds);
+			else
+				e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
 		}
 	}
 }
@@ -357,6 +406,75 @@ recognizer.LoadGrammarAsync(grammar); // put all together
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
 			Console.WriteLine("123123");
 
+	ng System.Globalization; 
+
+namespace VoiceRecording
+{
+    public partial class Form1 : Form
+    {
+
+        SpeechRecognitionEngine recEngine = new SpeechRecognitionEngine();
+        SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Choices commands = new Choices();
+            commands.Add(new string[] { "say hello", "print my name", "speak selected text", "11", "12", "2" });
+            GrammarBuilder gBuilder = new GrammarBuilder();
+			gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
+			gBuilder.Append(commands);
+            Grammar grammar = new Grammar(gBuilder);
+
+            recEngine.LoadGrammarAsync(grammar);
+            recEngine.SetInputToDefaultAudioDevice();
+            recEngine.SpeechRecognized += RecEngine_SpeechRecognized;
+        }
+
+        private void RecEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            float confidence = e.Result.Confidence;
+            if (confidence < 0.60)
+            {
+                textBox.Text += "\n Command not valid";
+                return;
+            }
+            switch (e.Result.Text) {
+                case "2":
+                    synthesizer.SpeakAsync("jajaja xdxdxd");
+                    break;
+                case "11":
+                    synthesizer.SpeakAsync("Hola Victor, chupame la concha?");
+                    break;
+                case "12":
+                    textBox.Text += "\nJorge";
+                    break;
+                default:
+                    textBox.Text += "\nCommand not valid";
+                    break;
+
+            }
+        }
+
+        private void btnEnable_Click(object sender, EventArgs e)
+        {
+            recEngine.RecognizeAsync(RecognizeMode.Multiple);
+            btnDisable.Enabled = true;
+            btnEnable.Enabled = false;
+
+        }
+
+        private void btnDisable_Click(object sender, EventArgs e)
+        {
+            recEngine.RecognizeAsyncStop();
+            btnDisable.Enabled = false;
+            btnEnable.Enabled = true;
+        }
+    }
+}
 
 
 	 */

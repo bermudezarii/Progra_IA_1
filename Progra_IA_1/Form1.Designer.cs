@@ -47,9 +47,10 @@
 			this.board.Name = "board";
 			this.board.RowCount = 1;
 			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 424F));
 			this.board.Size = new System.Drawing.Size(482, 424);
 			this.board.TabIndex = 0;
+			this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_1);
 			this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
 			// 
 			// panel1
