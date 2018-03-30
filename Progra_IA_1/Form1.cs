@@ -15,6 +15,9 @@ namespace Progra_IA_1
 {
 	public partial class Form1 : Form
 	{
+		//random generator
+		Random rand = new Random();
+
 		// all related to speak and recognize voice
 		SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine();
 		SpeechSynthesizer synthesizer = new SpeechSynthesizer();
@@ -27,13 +30,23 @@ namespace Progra_IA_1
 		// a is the size of each square
 		int a = 40;
 		// m is the total columns the player wants in the board
-		int m = 5;
+		int m = 2;
 		// n is the total rows the player wants in the board
-		int n = 5;
-		// actual position in axe x 
-		int axe_x = 0;
-		// actual position in axe y 
-		int axe_y = 0;
+		int n = 2;
+		// initial point
+		Node initial_point;
+		// final point
+		Node final_point; 
+		//percent of obstacles 
+		int perc_obst = 50;
+		// flag if they want diagonals to work
+		bool flag_diag = false; 
+		// points in matrix where there is an obstacle 
+		List<Tuple<int, int>> tuple_list_obstacles = new List<Tuple<int, int>>();
+		// logic board 
+		List<List<Node>> logic_board = new List<List<Node>>();
+		// tuple that indicates the tablelayout_paint what to do
+		Tuple<int, int, int> instruction_tuple; 
 
 		//flags for speech recognition, when they are = 1, they recognize the words related to that part
 		int r_init = 0;
@@ -41,6 +54,9 @@ namespace Progra_IA_1
 		int r_col = 0;
 		int r_row = 0;
 		int r_squ = 0; // means square
+		int r_sta = 0; // means start
+		int r_end = 0; 
+		int r_dia = 0; // means diagonals 
 		int r_rea = 0; // means ready
 		public Form1()
 		{
@@ -70,43 +86,90 @@ namespace Progra_IA_1
 			return x; 
 		}
 
-		private void check_position() {
+		private Node check_position(int x, int y, string move)
+		{
+			int new_x = x;
+			int new_y = y;
+			switch (move)
+			{
+				case "Arriba":
+					new_y = new_y - 1; break;
+				case "Abajo":
+					new_y = new_y + 1; break;
+				case "Izquierda":
+					new_x = new_x - 1; break;
+				case "Derecha":
+					new_x = new_x + 1; break;
+			}
+			
+			Console.WriteLine("new point " + new_x.ToString() + " " + new_y.ToString() + " move: " + move);
+			Node answer;
+			if (new_x < n && new_y < m && new_x > -1 && new_y > -1) // ponerle los ceros 
+			{
+				answer = logic_board[new_x][new_y];
+				/*if (its_obstacle(new_x, new_y))
+				{
+					Console.WriteLine("Entra a its obstacle de lo nuevo");
+					instruction_tuple = Tuple.Create(x, y, 0);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					this.board.Invalidate();
+					
 
+				}
+				else
+				{
+					Console.WriteLine("Entra de lo nuevo");
+					instruction_tuple = Tuple.Create(x, y, 1);
+					Console.WriteLine("1");
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					Console.WriteLine("le vale verga 2");
+					this.board.Invalidate();
+					
+
+				}*/
+				if (its_obstacle(x, y))
+				{
+					instruction_tuple = Tuple.Create(x, y, 4);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					this.board.Invalidate();
+				}
+				else {
+					Console.WriteLine("me no entender"); 
+					instruction_tuple = Tuple.Create(x, y, 3);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					this.board.Invalidate();
+				}
+				if (its_obstacle(new_x, new_y))
+				{
+					Console.WriteLine("Entra a its obstacle de lo nuevo");
+					instruction_tuple = Tuple.Create(new_x, new_y, 0);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					this.board.Invalidate();
+
+
+				}
+				else
+				{
+					Console.WriteLine("Entra de lo nuevo");
+					instruction_tuple = Tuple.Create(new_x, new_y, 1);
+					Console.WriteLine("1");
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					Console.WriteLine("le vale verga 2");
+					this.board.Invalidate();
+
+
+				}
+				return answer; 
+			}
+			else
+			{
+				synthesizer.SpeakAsync("La posición se sale del tablero, por lo que la posición actual es la anterior");
+				return logic_board.ElementAt(x).ElementAt(y); 
+			}
 		}
-
-		private void initial_position(object sender, SpeechRecognizedEventArgs e) {
-			Console.WriteLine("INITIAL POSITION");
-			if (e.Result.Text == "arriba")
-			{
-				synthesizer.SpeakAsync("iniciando el juego");
-
-			}
-			else if (e.Result.Text == "abajo")
-			{
-				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				
-			}
-			else if (e.Result.Text == "izquierda")
-			{
-				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				
-			}
-			else if (e.Result.Text == "derecha")
-			{
-				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				
-			}
-			else if (e.Result.Text == "listo")
-			{
-				synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
-				
-			}
-		}
-
-
 		
 
-		private void set_board() {
+		private void set_visual_board() {
 			this.board.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
 			board.RowStyles.Clear();
 			board.ColumnStyles.Clear();
@@ -126,9 +189,7 @@ namespace Progra_IA_1
 			this.board.ResumeLayout();
 			board.AutoSize = true;
 			this.board.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			Console.WriteLine("ya lo setie ): "); 
-
-			
+			Console.WriteLine("ya lo setie ):");
 		}
 
 		
@@ -136,11 +197,9 @@ namespace Progra_IA_1
 		private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
 		{
 			float confidence = e.Result.Confidence;
-			if (confidence < 0.60)
+			if (confidence < 0.10)
 			{
 				Console.WriteLine("Low confidence");
-				synthesizer.SpeakAsync("Comando no valido");
-
 			}
 			else if (r_init == 1)
 			{
@@ -163,7 +222,16 @@ namespace Progra_IA_1
 				{
 					synthesizer.SpeakAsync("Iniciando el juego");
 					r_pre = 0;
-					r_rea = 1;
+					r_sta = 1;
+					initialize_board_logic();
+					synthesizer.SpeakAsync("Mueva el punto de inicio de la partida, si lo desea ahí diga, listo");
+					r_row = 0;
+					r_sta = 1;
+					Console.WriteLine("TUPI");
+					Console.WriteLine("r_sta");
+					initial_point = search_initial_valid_position();
+					instruction_tuple = Tuple.Create(initial_point.Position_X, initial_point.Position_Y, 1);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
 
 				}
 				else if (e.Result.Text == "No")
@@ -189,7 +257,7 @@ namespace Progra_IA_1
 					a = number;
 					synthesizer.SpeakAsync("Cuántas columnas desea en el tablero?");
 					r_squ = 0;
-					r_col = 1; 
+					r_col = 1;
 				}
 			}
 			else if (r_col == 1)
@@ -208,7 +276,7 @@ namespace Progra_IA_1
 					m = number;
 					synthesizer.SpeakAsync("Cuántas filas desea en el tablero?");
 					r_col = 0;
-					r_row = 1; 
+					r_row = 1;
 				}
 			}
 			else if (r_row == 1)
@@ -225,34 +293,194 @@ namespace Progra_IA_1
 					synthesizer.SpeakAsync("La cantidad de filas son:");
 					synthesizer.SpeakAsync(number.ToString());
 					n = number;
-					set_board();
-					synthesizer.SpeakAsync("Cuál es la ubicación que desea para iniciar el camino?");
+					initialize_board_logic();
+					synthesizer.SpeakAsync("Mueva el punto de inicio de la partida, si lo desea ahí diga, listo");
+					r_row = 0;
+					r_sta = 1;
+					Console.WriteLine("TUPI");
+					Console.WriteLine("r_sta");
+					initial_point = search_initial_valid_position();
+					instruction_tuple = Tuple.Create(initial_point.Position_X, initial_point.Position_Y, 1);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
 
 				}
 			}
-			else if (r_rea == 1) { }
-			else
-
-			{
-
+			else if (r_sta == 1) {
+				
+				if ((e.Result.Text == "Arriba") || (e.Result.Text == "Abajo") || (e.Result.Text == "Izquierda") || (e.Result.Text == "Derecha"))
+				{
+					initial_point = check_position(initial_point.Position_X, initial_point.Position_Y, e.Result.Text); 
+				}
+				else if (e.Result.Text == "Listo")
+				{
+					if (its_obstacle(initial_point.Position_X, initial_point.Position_Y)) {
+						synthesizer.SpeakAsync("El punto inicial no es un lugar válido, cambie la posición con los comandos dados anteriormente."); 
+					}
+					else {
+						synthesizer.SpeakAsync("Mueva el punto final de la partida, si lo desea ahí diga, listo");
+						r_sta = 0;
+						r_end = 1; 
+					}
+				}
 			}
-           
+			else if (r_end == 1) {
+				final_point = search_final_valid_position();
+				instruction_tuple = Tuple.Create(final_point.Position_X, final_point.Position_Y, 1);
+				this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+				Console.WriteLine("r_end");
+				if ((e.Result.Text == "Arriba") || (e.Result.Text == "Abajo") || (e.Result.Text == "Izquierda") || (e.Result.Text == "Derecha"))
+				{
+					final_point = check_position(final_point.Position_X, final_point.Position_Y, e.Result.Text);
+				}
+				else if (e.Result.Text == "Listo")
+				{
+					if (its_obstacle(final_point.Position_X, final_point.Position_Y))
+					{
+						synthesizer.SpeakAsync("El punto final no es un lugar válido, cambie la posición con los comandos dados anteriormente.");
+					}
+					else
+					{
+						synthesizer.SpeakAsync("Finalmente, desea que se utilicen diagonales en la respuesta del juego? Responda si o no.");
+						r_end = 0;
+						r_dia = 1;
+					}
+				}
+			}
+			else if (r_dia == 1)
+			{
+				if (e.Result.Text == "Si")
+				{
+					flag_diag = true;
+					synthesizer.SpeakAsync("Las diagonales son permitidas, iniciando el juego");
+					r_dia = 0;
+					r_rea = 1;
+				}
 
+				else if (e.Result.Text == "No")
+				{
+					flag_diag = false;
+					synthesizer.SpeakAsync("Las diagonales no son permitidas, iniciando el juego");
+					r_dia = 0;
+					r_rea = 1;
+				}
+			}
+			else if (r_rea == 1)
+			{
+				A_star a_star = new A_star(logic_board, false, a);
+				var watch = System.Diagnostics.Stopwatch.StartNew();
+				Stack<Node> path = a_star.Find_path(initial_point.Position_X, initial_point.Position_Y, final_point.Position_X, final_point.Position_Y);
+				watch.Stop();
+				long elapsedMs = watch.ElapsedMilliseconds;
+				Console.WriteLine("Total Time: " + elapsedMs + " ms");
+				int size_path;
+				try
+				{
+					size_path = path.Count;
+				}
+				catch (Exception ex)
+				{
+					size_path = 0;
+					Console.WriteLine("No hay solucion");
+				}
+				for (int i = 0; i < size_path; i++)
+				{
+					Node n = path.Pop();
+					Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
+					instruction_tuple = Tuple.Create(n.Position_X, n.Position_Y, 2);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+				}
+			}
+		}
+
+		private bool assign_obstacle() {
+			int number = rand.Next(100); // creates a number between 0 and 100
+			if (number <= perc_obst)
+				return true;
+			else
+				return false;
+		}
+
+		private bool its_obstacle(int x, int y) {
+			bool traversable = logic_board.ElementAt(x).ElementAt(y).Traversable;
+			if (traversable == false) // traversable means you can pass through, so if it is false means it is an obstacle 
+			{
+				return true;
+			}
+			else {
+				return false; 
+			}
+		} 
+
+		private void initialize_board_logic() {
+			
+			logic_board = new List<List<Node>>();
+			for (int i = 0; i < n; i++) {
+				List<Node> row = new List<Node>(); 
+				for (int j = 0; j < m; j++) {
+					if (assign_obstacle() == true)
+					{
+						row.Add(new Node(i, j, false));
+						tuple_list_obstacles.Add(Tuple.Create(i,j));
+					}
+					else {
+						row.Add(new Node(i, j, true));
+					}
+					Console.WriteLine("done"); 
+				}
+				logic_board.Add(row); 
+				
+			}
+			set_visual_board();
+			this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_obstacles);
+
+		}
+
+
+		private Node search_initial_valid_position () {
+			
+			Console.WriteLine("quak");
+			for (int i = 0; i < n; i++)
+			{
+				for (int j = 0; j < m; j++)
+				{
+					Node eval = logic_board[i][j];
+					if (eval.Traversable == true) {
+						return eval;
+					}
+				}
+			}
+			return null; 
+		}
+
+		private Node search_final_valid_position()
+		{
+			for (int i = n-1; i >= 0; i--)
+			{
+				for (int j = m-1; j >= 0; j--)
+				{
+					Node eval = logic_board.ElementAt(i).ElementAt(j);
+					if (eval.Traversable == true)
+					{
+						return eval;
+					}
+				}
+			}
+			return null;
 		}
 
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
             /*****************PRUEBA DE A ESTRELLA, LUEGO SE QUITA**************************/
-
+			/*
             List<List<Node>> labyrinth = new List<List<Node>>();
 
             List<Node> nodes = new List<Node>
             {
                 new Node(0, 0, true),
                 new Node(0, 1, true),
-                new Node(0, 2, true),
-                new Node(0, 3, true)
+                new Node(0, 2, false)
+           
             };
 
             labyrinth.Add(nodes);
@@ -260,36 +488,43 @@ namespace Progra_IA_1
             {
                 new Node(1, 0, true),
                 new Node(1, 1, false),
-                new Node(1, 2, false),
-                new Node(1, 3, false)
+                new Node(1, 2, true)
             };
             labyrinth.Add(nodes);
 
             nodes = new List<Node>
             {
-                new Node(2, 0, true),
+                new Node(2, 0, false),
                 new Node(2, 1, true),
-                new Node(2, 2, false),
-                new Node(2, 3, true)
+                new Node(2, 2, true)
+         
             };
             labyrinth.Add(nodes);
 
-            A_star a_star = new A_star(labyrinth, true, 30);
+            A_star a_star = new A_star(labyrinth, false, 30);
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            Stack<Node> path = a_star.Find_path(2, 0, 0, 3);
+            Stack<Node> path = a_star.Find_path(0, 0, 2, 2);
             watch.Stop();
             long elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine("Total Time: " + elapsedMs + " ms");
-            int size_path = path.Count;
+			int size_path; 
+			try
+			{
+				size_path = path.Count;
+			}
+			catch (Exception ex) {
+				size_path = 0;
+				Console.WriteLine("No hay solucion");
+			}
             for(int i = 0; i < size_path; i++)
             {
                 Node n = path.Pop();
                 Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
-            }
+            }*/
 			/*********************TERMINA PRUEBA DE A ESTRELLA******************************/
 
 			Choices commands = new Choices();
-			commands.Add(new string[] {"Iniciar", "Terminar", "Si", "No", "Limpiar", "Arriba", "Abajo", "Izquierda", "Derecha"});
+			commands.Add(new string[] {"Iniciar", "Terminar", "Si", "No", "Limpiar", "Arriba", "Abajo", "Izquierda", "Derecha", "Listo"});
 			GrammarBuilder gBuilder = new GrammarBuilder();
 			gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
 			gBuilder.Append(commands);
@@ -303,7 +538,8 @@ namespace Progra_IA_1
 			recognizer.RecognizeAsync(RecognizeMode.Multiple);
 			synthesizer.SpeakAsync("Bienvenido al juego, para jugar diga iniciar, o terminar para cerrar la aplicación");
 			r_init = 1;
-			set_board();
+			
+
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
 			Console.WriteLine("123123");
 			
@@ -321,222 +557,50 @@ namespace Progra_IA_1
 
 		private void board_CellPaint_1(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			if ((e.Column + e.Row) % 2 == 1)
-				e.Graphics.FillRectangle(Brushes.Black, e.CellBounds);
-			else
-				e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
-		}
-	}
-}
-/*
- SI SIRVE
- namespace Progra_IA_1
-{
-	public partial class Form1 : Form
-	{
-		SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine();
-		public Form1()
-		{
-			InitializeComponent();
-			
-			
+			e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
 		}
 
-		
+		private void board_CellPaint_obstacles(object sender, TableLayoutCellPaintEventArgs e) {
+			for (int i = 0; i < tuple_list_obstacles.Count; i++) {
+				Tuple<int, int> tuple = tuple_list_obstacles.ElementAt(i);
+				if (e.Row == tuple.Item1 && e.Column == tuple.Item2) {
+					e.Graphics.FillRectangle(Brushes.Black, e.CellBounds);
+				}
 
-
-		private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
-		{
-
-			Console.WriteLine("Quak");
-			if (e.Result.Text == "iniciar") 
-			{
-				MessageBox.Show("Hello");
-				label1.Text = "it works";
-			}
-			else{
-				label1.Text = e.Result.Text; 
 			}
 		}
 
 
-		
-
-		private void button1_Click(object sender, EventArgs e)
+		private void board_CellPaint_color(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			recognizer.RecognizeAsync(RecognizeMode.Multiple);
-			label1.Text = "Activo"; 
+			//Console.WriteLine("ok"); 
+			if (e.Row == instruction_tuple.Item1 && e.Column == instruction_tuple.Item2) {
+				Console.WriteLine("Entra para pintar.");
+				if (instruction_tuple.Item3 == 0) {
+					e.Graphics.FillRectangle(Brushes.Red, e.CellBounds);
+					Console.WriteLine("Rojo.");
+				}
+				else if (instruction_tuple.Item3 == 1) {
+					e.Graphics.FillRectangle(Brushes.Green, e.CellBounds);
+					Console.WriteLine("Verde.");
+				}
+				else if (instruction_tuple.Item3 == 2) {
+					e.Graphics.FillRectangle(Brushes.BlueViolet, e.CellBounds);
+					Console.WriteLine("Violeta.");
+				}
+				else if (instruction_tuple.Item3 == 3) {
+					e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+					Console.WriteLine("Blanco.");
+				}
+				else if (instruction_tuple.Item3 == 4) {
+					e.Graphics.FillRectangle(Brushes.Black, e.CellBounds);
+					Console.WriteLine("Negro");
+				}
+
+			}
+			
 		}
 
-		private void Form1_Load(object sender, EventArgs e)
-		{
-			Console.WriteLine("input device recognised.......");
-			recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
-			Grammar grammar = new DictationGrammar();
-			recognizer.LoadGrammar(grammar); // put all together
-			recognizer.RecognizeAsync(RecognizeMode.Multiple);
-			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
-			Console.WriteLine("123123");
-		}
+
 	}
 }
-
-	 
-	 */
-
-
-
-/*
-
- ESTE NO SIRVE 
-			Console.WriteLine("input device recognised.......");
-		
-Console.WriteLine("1");
-			Choices commands = new Choices();
-Console.WriteLine("2");
-			commands.Add(new string[] { "Iniciar", "Terminar" });
-			Console.WriteLine("3");
-			GrammarBuilder grammarBuilder = new GrammarBuilder();
-grammarBuilder.Append(commands);
-			Console.WriteLine("4");
-			Grammar grammar = new Grammar(grammarBuilder);
-recognizer.LoadGrammarAsync(grammar); // put all together
-			recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
-			Console.WriteLine("1");
-			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
-			Console.WriteLine("123123");
-
-	ng System.Globalization; 
-
-namespace VoiceRecording
-{
-    public partial class Form1 : Form
-    {
-
-        SpeechRecognitionEngine recEngine = new SpeechRecognitionEngine();
-        SpeechSynthesizer synthesizer = new SpeechSynthesizer();
-        public Form1()
-        {
-            InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            Choices commands = new Choices();
-            commands.Add(new string[] { "say hello", "print my name", "speak selected text", "11", "12", "2" });
-            GrammarBuilder gBuilder = new GrammarBuilder();
-			gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
-			gBuilder.Append(commands);
-            Grammar grammar = new Grammar(gBuilder);
-
-            recEngine.LoadGrammarAsync(grammar);
-            recEngine.SetInputToDefaultAudioDevice();
-            recEngine.SpeechRecognized += RecEngine_SpeechRecognized;
-        }
-
-        private void RecEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-            float confidence = e.Result.Confidence;
-            if (confidence < 0.60)
-            {
-                textBox.Text += "\n Command not valid";
-                return;
-            }
-            switch (e.Result.Text) {
-                case "2":
-                    synthesizer.SpeakAsync("jajaja xdxdxd");
-                    break;
-                case "11":
-                    synthesizer.SpeakAsync("Hola Victor, chupame la concha?");
-                    break;
-                case "12":
-                    textBox.Text += "\nJorge";
-                    break;
-                default:
-                    textBox.Text += "\nCommand not valid";
-                    break;
-
-            }
-        }
-
-        private void btnEnable_Click(object sender, EventArgs e)
-        {
-            recEngine.RecognizeAsync(RecognizeMode.Multiple);
-            btnDisable.Enabled = true;
-            btnEnable.Enabled = false;
-
-        }
-
-        private void btnDisable_Click(object sender, EventArgs e)
-        {
-            recEngine.RecognizeAsyncStop();
-            btnDisable.Enabled = false;
-            btnEnable.Enabled = true;
-        }
-    }
-}
-
-
-	 */
-
-
-/*
- ESQUELETO ESQUELETIN QUE TENIA PENSADO PARA LO DE LA VOZ
-
-
-Inicio
-Syntetizer (si o no)
-Supongo que tengo que hacer una funcion como la que se suma pero con si o no. Inicio_decider
-
-Inicio_decider 
-If e.response.text == "si"
-	Valores() 
-If iniciar 
-  Inicio() 
-If terminar
-   Cerrar() 
-If no 
-   Game
-Else 
-	Nada? 
-
-Pixeles () 
-Sytetizer tamaño en pixeles
-Ver si lo de la función decider se puede meter aqui
-If es setval ==1
- Filas() 
-
-Pixeles_decider()
-Resp = E.respuesta
-Separla en mini strings
-Func sacar num
-For i in tamaño de resp 
-	  If Mini.i es num peq
-			  Transformar a num
-			   Break
-	  Else if es num grand
-			  Transformar a num
-			   Break
-	  Else 
-			Di nop 
-If resultado =! Null 
-	   Syntetizer el num es tal 
-Else 
-	   Syntetizer no es un número valido
-
-
-Filas() 
-Syntetizer cuantas filas 
-El += filas_decider
-If setfilas =  1
-	Cols()
-
-Same para cols() 
-
-Luego
-
-Game () 
-+= commands
-
-
- */
