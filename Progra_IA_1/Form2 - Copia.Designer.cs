@@ -1,6 +1,6 @@
 ﻿namespace Progra_IA_1
 {
-	partial class Form1
+	/*partial class Form1
 	{
 		/// <summary>
 		/// Variable del diseñador necesaria.
@@ -50,6 +50,7 @@
 			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 424F));
 			this.board.Size = new System.Drawing.Size(482, 424);
 			this.board.TabIndex = 0;
+			this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_1);
 			this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
 			// 
 			// panel1
@@ -87,6 +88,6 @@
 
 		private System.Windows.Forms.TableLayoutPanel board;
 		private System.Windows.Forms.Panel panel1;
-	}
+	}*/
 }
 

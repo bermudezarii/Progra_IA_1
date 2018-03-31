@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace Progra_IA_1
 {
-	public partial class Form1 : Form
+	/*public partial class Form1 : Form
 	{
 		//random generator
 		Random rand = new Random();
@@ -28,24 +28,25 @@ namespace Progra_IA_1
 
 		// board game info (: 
 		// a is the size of each square
-		int a = 20;
+		int a = 40;
 		// m is the total columns the player wants in the board
-		int m = 40;
+		int m = 15;
 		// n is the total rows the player wants in the board
-		int n = 40;
+		int n = 15;
 		// initial point
 		Node initial_point;
 		// final point
 		Node final_point; 
 		//percent of obstacles 
-		int perc_obst = 20;
+		int perc_obst = 30;
 		// flag if they want diagonals to work
 		bool flag_diag = false; 
 		// points in matrix where there is an obstacle 
 		List<Tuple<int, int>> tuple_list_obstacles = new List<Tuple<int, int>>();
 		// logic board 
 		List<List<Node>> logic_board = new List<List<Node>>();
-
+		// tuple that indicates the tablelayout_paint what to do
+		Tuple<int, int, int> instruction_tuple; 
 
 		//flags for speech recognition, when they are = 1, they recognize the words related to that part
 		int r_init = 0;
@@ -109,18 +110,37 @@ namespace Progra_IA_1
 				answer = logic_board[new_x][new_y];
 				if (its_obstacle(x, y))
 				{
+					//instruction_tuple = Tuple.Create(x, y, 4);
+					//this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
 					this.board.GetControlFromPosition(y, x).BackColor = Color.Black ;
+					//this.board.Invalidate();
 				}
 				else {
+					Console.WriteLine("me no entender");
+					//instruction_tuple = Tuple.Create(x, y, 3);
+					//this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					//this.board.Invalidate();
 					this.board.GetControlFromPosition(y, x).BackColor = Color.White;
 				}
 				if (its_obstacle(new_x, new_y))
 				{
+					Console.WriteLine("Entra a its obstacle de lo nuevo");
+					//instruction_tuple = Tuple.Create(new_x, new_y, 0);
+					//this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					//this.board.Invalidate();
 					this.board.GetControlFromPosition(new_y, new_x).BackColor = Color.Red;
 				}
 				else
 				{
+					Console.WriteLine("Entra de lo nuevo");
+					/*instruction_tuple = Tuple.Create(new_x, new_y, 1);
+					Console.WriteLine("1");
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					Console.WriteLine("le vale verga 2");
+					this.board.Invalidate();
 					this.board.GetControlFromPosition(new_y, new_x).BackColor = Color.Green;
+
+
 				}
 				return answer; 
 			}
@@ -138,16 +158,16 @@ namespace Progra_IA_1
 			board.ColumnStyles.Clear();
 			board.AutoScroll = true;
 			board.AutoSize = true;
-			board.Visible = false;
-			board.Controls.Clear();
-			board.SuspendLayout();
-			for (int i = 0; i < m; i++) {
+			
+		
+ 			for (int i = 0; i < m; i++) {
 				Console.WriteLine(i);
 				board.ColumnCount++;
 				this.board.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, a));
-				
+			
 
 			}
+		
 			for (int i = 0; i < n; i++)
 			{
 				Console.WriteLine(i);
@@ -155,6 +175,7 @@ namespace Progra_IA_1
 				this.board.RowStyles.Add(new RowStyle(SizeType.Absolute, a));
 				
 			}
+			
 			for (int i = 0; i < n; i++)
 			{
 				for (int j = 0; j < m; j++)
@@ -162,8 +183,9 @@ namespace Progra_IA_1
 					this.board.Controls.Add(new Panel { Dock = DockStyle.Fill }, j, i);
 				}	
 			}
-			board.ResumeLayout();
-			board.Visible = true;
+
+
+			this.board.ResumeLayout();
 			board.AutoSize = true;
 			this.board.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			Console.WriteLine("ya lo setie ):");
@@ -207,6 +229,8 @@ namespace Progra_IA_1
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
+					//instruction_tuple = Tuple.Create(initial_point.Position_X, initial_point.Position_Y, 1);
+					//this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
 					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackColor = Color.Green;
 
 				}
@@ -276,6 +300,8 @@ namespace Progra_IA_1
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
+					/*instruction_tuple = Tuple.Create(initial_point.Position_X, initial_point.Position_Y, 1);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
 					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackColor = Color.Green;
 
 				}
@@ -296,6 +322,17 @@ namespace Progra_IA_1
 						r_sta = 0;
 						r_end = 1; 
 						final_point = search_final_valid_position();
+						/*instruction_tuple = Tuple.Create(final_point.Position_X, final_point.Position_Y, 1);
+						Console.WriteLine("Hola");
+						this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+						this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackColor = Color.Green;
+						this.board.Refresh();
+						Console.WriteLine("Hola 1");
+						instruction_tuple = Tuple.Create(initial_point.Position_X, initial_point.Position_Y, 1);
+						Console.WriteLine("Hola 2");
+						this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+						this.board.Refresh();
+						Console.WriteLine("Hola 3");
 						this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackColor = Color.Green;
 					}
 				}
@@ -328,7 +365,7 @@ namespace Progra_IA_1
 					flag_diag = true;
 					synthesizer.SpeakAsync("Las diagonales son permitidas, iniciando el juego");
 					r_dia = 0;
-					run_a();
+					r_rea = 1;
 				}
 
 				else if (e.Result.Text == "No")
@@ -336,35 +373,35 @@ namespace Progra_IA_1
 					flag_diag = false;
 					synthesizer.SpeakAsync("Las diagonales no son permitidas, iniciando el juego");
 					r_dia = 0;
-					run_a();
+					r_rea = 1;
 				}
 			}
-
-		}
-
-		private void run_a() {
-			A_star a_star = new A_star(logic_board, flag_diag, a);
-			var watch = System.Diagnostics.Stopwatch.StartNew();
-			Stack<Node> path = a_star.Find_path(initial_point.Position_X, initial_point.Position_Y, final_point.Position_X, final_point.Position_Y);
-			watch.Stop();
-			long elapsedMs = watch.ElapsedMilliseconds;
-			Console.WriteLine("Total Time: " + elapsedMs + " ms");
-			int size_path;
-			try
+			else if (r_rea == 1)
 			{
-				size_path = path.Count;
-			}
-			catch (Exception ex)
-			{
-				size_path = 0;
-				Console.WriteLine("No hay solucion");
-				synthesizer.SpeakAsync("No hay solucion");
-			}
-			for (int i = 0; i < size_path; i++)
-			{
-				Node n = path.Pop();
-				Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
-				this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackColor = Color.Violet;
+				A_star a_star = new A_star(logic_board, flag_diag, a);
+				var watch = System.Diagnostics.Stopwatch.StartNew();
+				Stack<Node> path = a_star.Find_path(initial_point.Position_X, initial_point.Position_Y, final_point.Position_X, final_point.Position_Y);
+				watch.Stop();
+				long elapsedMs = watch.ElapsedMilliseconds;
+				Console.WriteLine("Total Time: " + elapsedMs + " ms");
+				int size_path;
+				try
+				{
+					size_path = path.Count;
+				}
+				catch (Exception ex)
+				{
+					size_path = 0;
+					Console.WriteLine("No hay solucion");
+				}
+				for (int i = 0; i < size_path; i++)
+				{
+					Node n = path.Pop();
+					Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
+					/*instruction_tuple = Tuple.Create(n.Position_X, n.Position_Y, 2);
+					this.board.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.board_CellPaint_color);
+					this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackColor = Color.Violet;
+				}
 			}
 		}
 
@@ -410,13 +447,16 @@ namespace Progra_IA_1
 			for (int i = 0; i < tuple_list_obstacles.Count; i++)
 			{
 				Tuple<int, int> tuple = tuple_list_obstacles.ElementAt(i);
-				this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackColor = Color.Black;	
+				this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackColor = Color.Black;
+						
 			}
 
 		}
 
 
 		private Node search_initial_valid_position () {
+			
+			Console.WriteLine("quak");
 			for (int i = 0; i < n; i++)
 			{
 				for (int j = 0; j < m; j++)
@@ -455,13 +495,20 @@ namespace Progra_IA_1
 			gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
 			gBuilder.Append(commands);
 			Grammar grammar = new Grammar(gBuilder);
+
+			Console.WriteLine("input device recognised.......");
 			recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
 			synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult, 0,CultureInfo.GetCultureInfo("es-ES"));
+			
 			recognizer.LoadGrammarAsync(grammar); // put all together
 			recognizer.RecognizeAsync(RecognizeMode.Multiple);
 			synthesizer.SpeakAsync("Bienvenido al juego, para jugar diga iniciar, o terminar para cerrar la aplicación");
 			r_init = 1;
+			
+
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
+			Console.WriteLine("123123");
+			
 		}
 
 		private void board_Paint(object sender, PaintEventArgs e)
@@ -474,5 +521,21 @@ namespace Progra_IA_1
 			
 		}
 
-	}
+		private void board_CellPaint_1(object sender, TableLayoutCellPaintEventArgs e)
+		{
+			e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+		}
+
+		private void board_CellPaint_obstacles(object sender, TableLayoutCellPaintEventArgs e) {
+			for (int i = 0; i < tuple_list_obstacles.Count; i++) {
+				Tuple<int, int> tuple = tuple_list_obstacles.ElementAt(i);
+				if (e.Row == tuple.Item1 && e.Column == tuple.Item2) {
+					e.Graphics.FillRectangle(Brushes.Black, e.CellBounds);
+				}
+
+			}
+		}
+
+
+	}*/
 }
