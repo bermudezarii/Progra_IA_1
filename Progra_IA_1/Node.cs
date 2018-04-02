@@ -8,21 +8,20 @@ namespace Progra_IA_1
 {
     class Node
     {
-        public static int Node_size = 30;
         public Node Parent { get; set; }
 
         public int Position_X { get; set; }
         public int Position_Y { get; set; }
 
-        public double Distance_target { get; set; }
+        public double H_cost { get; set; }
 
-        public double Real_cost { get; set; }
+        public double G_cost { get; set; }
         public double F_cost
         {
             get
             {
-                if (Distance_target != -1 && Real_cost != -1)
-                    return Distance_target + Real_cost;
+                if (H_cost != -1 && G_cost != -1)
+                    return H_cost + G_cost;
                 else
                     return -1;
             }
@@ -35,8 +34,8 @@ namespace Progra_IA_1
             Parent = null;
             Position_X = position_X;
             Position_Y = position_Y;
-            Distance_target = -1;
-            Real_cost = 1;
+            H_cost = -1;
+            G_cost = 0;
             Traversable = traversable;
         }
     }

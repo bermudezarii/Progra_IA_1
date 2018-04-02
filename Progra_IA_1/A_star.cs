@@ -99,14 +99,16 @@ namespace Progra_IA_1
                             /* Case algorithm include diagonal*/
                             if (diagonal_flag)
                             {
-                                n.Distance_target = Distance_diagonal(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
+                                n.H_cost = Distance_diagonal(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
+                                n.G_cost += hypotenuse + n.Parent.G_cost;
                             }
 
                             else
                             {
-                                n.Distance_target = Distance_manhattan(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
+                                n.H_cost = Distance_manhattan(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
+                                n.G_cost += square_size + n.Parent.G_cost;
                             }
-                            n.Real_cost += n.Parent.Real_cost;
+                            
                             open_list.Add(n);
 
                             /* Order open_list by f(n) = g(n) + h(n) */
