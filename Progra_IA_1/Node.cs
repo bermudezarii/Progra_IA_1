@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Progra_IA_1
 {
-    class Node
+    class Node : IHeapElement<Node>
     {
         public Node Parent { get; set; }
 
@@ -28,6 +28,17 @@ namespace Progra_IA_1
         }
 
         public bool Traversable { get; set; }
+        public int Heap_index
+        {
+            get
+            {
+                return Heap_index;
+            }
+            set
+            {
+                Heap_index = value;
+            }
+        }
 
         public Node(int position_X, int position_Y, bool traversable)
         {
@@ -37,6 +48,16 @@ namespace Progra_IA_1
             H_cost = -1;
             G_cost = 0;
             Traversable = traversable;
+        }
+
+        public int CompareTo(Node node)
+        {
+            int compare = F_cost.CompareTo(node.F_cost);
+            if(compare == 0)
+            {
+                compare = H_cost.CompareTo(node.H_cost);
+            }
+            return -compare;
         }
     }
 }

@@ -35,6 +35,13 @@ namespace Progra_IA_1
                 return board[0].Count;
             }
         }
+        public int max_size
+        {
+            get
+            {
+                return board_rows * board_columns;
+            }
+        }
         public A_star(List<List<Node>> board, bool diagonal_flag, double square_size)
         {
             this.board = board;
@@ -61,7 +68,7 @@ namespace Progra_IA_1
             Stack<Node> path = new Stack<Node>();
 
             /* open_list: Nodes to be evaluate */
-            List<Node> open_list = new List<Node>();
+            Heap<Node> open_list = new Heap<Node>(max_size);
 
             /* close_list: Nodes already evaluate */
             List<Node> close_list = new List<Node>();
@@ -77,8 +84,7 @@ namespace Progra_IA_1
             while (open_list.Count != 0 && !close_list.Exists(x => ((x.Position_X == end.Position_X) && (x.Position_Y == end.Position_Y))))
             {
                 /* Assign current node and remove it from open_list */
-                current = open_list[0];
-                open_list.Remove(current);
+                current = open_list.Remove_first();
 
                 /* Add element in close_list and get neighbor nodes */
                 close_list.Add(current);
@@ -112,7 +118,7 @@ namespace Progra_IA_1
                             open_list.Add(n);
 
                             /* Order open_list by f(n) = g(n) + h(n) */
-                            open_list = open_list.OrderBy(node => node.F_cost).ToList();
+                            //open_list = open_list.OrderBy(node => node.F_cost).ToList();
                         }
                     }
                 }
