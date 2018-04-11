@@ -28,6 +28,20 @@ namespace Progra_IA_1
         }
 
         public bool Traversable { get; set; }
+
+        
+
+
+        public Node(int position_X, int position_Y, bool traversable)
+        {
+            Parent = null;
+            Position_X = position_X;
+            Position_Y = position_Y;
+            H_cost = -1;
+            G_cost = 0;
+            Traversable = traversable;
+        }
+
         public int Heap_index
         {
             get
@@ -38,16 +52,6 @@ namespace Progra_IA_1
             {
                 Heap_index = value;
             }
-        }
-
-        public Node(int position_X, int position_Y, bool traversable)
-        {
-            Parent = null;
-            Position_X = position_X;
-            Position_Y = position_Y;
-            H_cost = -1;
-            G_cost = 0;
-            Traversable = traversable;
         }
 
         public int CompareTo(Node node)

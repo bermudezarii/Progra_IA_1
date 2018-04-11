@@ -68,7 +68,7 @@ namespace Progra_IA_1
             Stack<Node> path = new Stack<Node>();
 
             /* open_list: Nodes to be evaluate */
-            Heap<Node> open_list = new Heap<Node>(max_size);
+            List<Node> open_list = new List<Node>();
 
             /* close_list: Nodes already evaluate */
             List<Node> close_list = new List<Node>();
@@ -84,7 +84,9 @@ namespace Progra_IA_1
             while (open_list.Count != 0 && !close_list.Exists(x => ((x.Position_X == end.Position_X) && (x.Position_Y == end.Position_Y))))
             {
                 /* Assign current node and remove it from open_list */
-                current = open_list.Remove_first();
+                current = open_list[0];
+
+                open_list.Remove(current);
 
                 /* Add element in close_list and get neighbor nodes */
                 close_list.Add(current);
@@ -118,7 +120,7 @@ namespace Progra_IA_1
                             open_list.Add(n);
 
                             /* Order open_list by f(n) = g(n) + h(n) */
-                            //open_list = open_list.OrderBy(node => node.F_cost).ToList();
+                            open_list = open_list.OrderBy(node => node.F_cost).ToList();
                         }
                     }
                 }
