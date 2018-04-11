@@ -27,6 +27,8 @@ namespace Progra_IA_1
         {
             element.Heap_index = Count;
             elements[Count] = element;
+            Sort_up(element);
+            Count++;
 
         }
 

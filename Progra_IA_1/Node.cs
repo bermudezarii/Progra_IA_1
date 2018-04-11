@@ -16,6 +16,7 @@ namespace Progra_IA_1
         public double H_cost { get; set; }
 
         public double G_cost { get; set; }
+
         public double F_cost
         {
             get
@@ -42,17 +43,7 @@ namespace Progra_IA_1
             Traversable = traversable;
         }
 
-        public int Heap_index
-        {
-            get
-            {
-                return Heap_index;
-            }
-            set
-            {
-                Heap_index = value;
-            }
-        }
+        public int Heap_index { get; set; }
 
         public int CompareTo(Node node)
         {

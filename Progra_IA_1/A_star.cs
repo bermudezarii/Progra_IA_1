@@ -68,30 +68,29 @@ namespace Progra_IA_1
             Stack<Node> path = new Stack<Node>();
 
             /* open_list: Nodes to be evaluate */
-            List<Node> open_list = new List<Node>();
+            Heap<Node> open_list = new Heap<Node>(max_size);
 
             /* close_list: Nodes already evaluate */
             List<Node> close_list = new List<Node>();
 
             /* adjacencies: Neighbors nodes of current node */
             List<Node> adjacencies;
-            Node current = start;
 
             /* Add initial node to open_list */
+            Node current = start;
             open_list.Add(current);
+            int round = 1;
 
             /* Travel every node from open_list */
             while (open_list.Count != 0 && !close_list.Exists(x => ((x.Position_X == end.Position_X) && (x.Position_Y == end.Position_Y))))
             {
                 /* Assign current node and remove it from open_list */
-                current = open_list[0];
-
-                open_list.Remove(current);
-
+                current = open_list.Remove_first();
+                
                 /* Add element in close_list and get neighbor nodes */
                 close_list.Add(current);
                 adjacencies = Get_adjacent_nodes(current);
-
+                Console.WriteLine(round);
                 foreach(Node n in adjacencies)
                 {
                     /* Case node is obstacle or is not stored in close_list */
@@ -108,7 +107,15 @@ namespace Progra_IA_1
                             if (diagonal_flag)
                             {
                                 n.H_cost = Distance_diagonal(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
-                                n.G_cost += hypotenuse + n.Parent.G_cost;
+                                if(n.Parent.Position_X != n.Position_X && n.Parent.Position_Y != n.Position_Y)
+                                {
+                                    n.G_cost += hypotenuse + n.Parent.G_cost;
+                                }
+                                else
+                                {
+                                    n.G_cost += square_size + n.Parent.G_cost;
+                                }
+                                Console.WriteLine("(" + n.Position_X + ", " + n.Position_Y + ") =" + n.F_cost);
                             }
 
                             else
@@ -120,10 +127,11 @@ namespace Progra_IA_1
                             open_list.Add(n);
 
                             /* Order open_list by f(n) = g(n) + h(n) */
-                            open_list = open_list.OrderBy(node => node.F_cost).ToList();
+                            //open_list = open_list.OrderBy(node => node.F_cost).ToList();
                         }
                     }
                 }
+                round++;
             }
 
             /* Verify if final node is stored in close_list */
@@ -223,10 +231,15 @@ namespace Progra_IA_1
         private double Distance_diagonal(int start_X, int start_Y, int end_X, int end_Y)
         {
             /* Formula: ((x2 - x1) ^ 2 + (y2 - y1) ^ 2) ^ (1/2) */
-            double max_distance = Math.Max(Math.Abs(start_X - end_X), Math.Abs(start_Y - end_Y));
+            /*double max_distance = Math.Max(Math.Abs(start_X - end_X), Math.Abs(start_Y - end_Y));
             double min_distance = Math.Min(Math.Abs(start_X - end_X), Math.Abs(start_Y - end_Y));
 
-            return hypotenuse * min_distance + square_size * (max_distance - min_distance);
+            return hypotenuse * min_distance + square_size * (max_distance - min_distance);*/
+
+            double dx = Math.Abs(start_X - end_X);
+            double dy = Math.Abs(start_Y - end_Y);
+
+            return square_size * (dx + dy) + (hypotenuse - 2 * square_size) * Math.Min(dx, dy);
         }
     }
 }
