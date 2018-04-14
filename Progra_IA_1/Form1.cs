@@ -28,19 +28,19 @@ namespace Progra_IA_1
 
 		// board game info (: 
 		// a is the size of each square
-		int a = 20;
+		int a;
 		// m is the total columns the player wants in the board
-		int m = 40;
+		int m;
 		// n is the total rows the player wants in the board
-		int n = 40;
+		int n;
 		// initial point
 		Node initial_point;
 		// final point
 		Node final_point; 
 		//percent of obstacles 
-		int perc_obst = 20;
+		int perc_obst;
 		// flag if they want diagonals to work
-		bool flag_diag = false; 
+		bool flag_diag; 
 		// points in matrix where there is an obstacle 
 		List<Tuple<int, int>> tuple_list_obstacles = new List<Tuple<int, int>>();
 		// logic board 
@@ -48,22 +48,69 @@ namespace Progra_IA_1
 
 
 		//flags for speech recognition, when they are = 1, they recognize the words related to that part
-		int r_init = 0;
-		int r_pre = 0; // prestablished parameters
-		int r_col = 0;
-		int r_row = 0;
-		int r_squ = 0; // means square
-		int r_sta = 0; // means start
-		int r_end = 0; 
-		int r_dia = 0; // means diagonals 
-		int r_rea = 0; // means ready
-		public Form1()
+		int r_init;
+		int r_pre; // prestablished parameters
+		int r_col;
+		int r_row;
+		int r_squ; // means square
+		int r_sta; // means start
+		int r_end; 
+		int r_dia; // means diagonals 
+		int r_rea; // means ready
+        int r_cha; // means change
+        int r_clean; // means clean actual path
+		
+        public Form1()
 		{
 			InitializeComponent();
 			
+            this.Text = "El juego de Laika";
+
 			panel1.VerticalScroll.Enabled = true;
 			panel1.VerticalScroll.Visible = true; 
-		}
+            panel1.HorizontalScroll.Enabled = true;
+			panel1.HorizontalScroll.Visible = true;
+        
+        }
+
+        private void restart_game_info()
+        {
+            a = 30;
+		    m = 20;
+		    n = 20;
+		    perc_obst = 20;
+		    flag_diag = false; 
+		    tuple_list_obstacles = new List<Tuple<int, int>>();
+		    logic_board = new List<List<Node>>();
+        }   
+
+        private void restart_flags()
+        {
+            r_init = 1;
+		    r_pre = 0;
+		    r_col = 0;
+		    r_row = 0;
+		    r_squ = 0;
+		    r_sta = 0;
+		    r_end = 0; 
+		    r_dia = 0;
+		    r_rea = 0;
+            r_cha = 0;
+        }
+
+        private void activate_flag_positions()
+        {
+            r_init = 0;
+		    r_pre = 0;
+		    r_col = 0;
+		    r_row = 0;
+		    r_squ = 0;
+		    r_sta = 1;
+		    r_end = 0; 
+		    r_dia = 0;
+		    r_rea = 0;
+            r_cha = 0;
+        }
 
 		private int from_number_str_to_int(string str) {
 			Console.WriteLine("str_int");
@@ -109,18 +156,19 @@ namespace Progra_IA_1
 				answer = logic_board[new_x][new_y];
 				if (its_obstacle(x, y))
 				{
-					this.board.GetControlFromPosition(y, x).BackColor = Color.Black ;
+					this.board.GetControlFromPosition(y, x).BackgroundImage = Progra_IA_1.Properties.Resources.Obstacle;
 				}
 				else {
-					this.board.GetControlFromPosition(y, x).BackColor = Color.White;
+					this.board.GetControlFromPosition(y, x).BackgroundImage = Progra_IA_1.Properties.Resources.Three;
 				}
 				if (its_obstacle(new_x, new_y))
 				{
-					this.board.GetControlFromPosition(new_y, new_x).BackColor = Color.Red;
+                    //I need to change this, go to the next valid position
+					this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = Progra_IA_1.Properties.Resources.Obstacle;
 				}
 				else
 				{
-					this.board.GetControlFromPosition(new_y, new_x).BackColor = Color.Green;
+					this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = Progra_IA_1.Properties.Resources.Three;
 				}
 				return answer; 
 			}
@@ -130,6 +178,31 @@ namespace Progra_IA_1
 				return logic_board.ElementAt(x).ElementAt(y); 
 			}
 		}
+
+        private void clean_board()
+        {
+            board.AutoScroll = true;
+			board.AutoSize = true;
+            board.Visible = false;
+            board.RowStyles.Clear();
+			board.ColumnStyles.Clear();
+			board.Controls.Clear();
+        }
+
+        private void clean_path()
+        {
+            for (int x = 0; x < n; x++)
+			{
+                for (int y = 0; y < m; y++)
+                    {
+                        if (this.board.GetControlFromPosition(y, x).BackgroundImage == Progra_IA_1.Properties.Resources.Bone)
+                        {
+                           this.board.GetControlFromPosition(y, x).BackgroundImage = Progra_IA_1.Properties.Resources.Three;
+                        }
+                    }
+				
+			}
+        }
 		
 
 		private void set_visual_board() {
@@ -183,7 +256,8 @@ namespace Progra_IA_1
 				Console.WriteLine("r_init");
 				if (e.Result.Text == "Iniciar")
 				{
-					synthesizer.SpeakAsync("Desea utilizar la configuración prestablecida para el juego, diga si o no.");
+                    clean_board();
+					synthesizer.SpeakAsync("Laika pregunta si deseas utilizar la configuración prestablecida para el juego, di la palabra si o no.");
 					r_init = 0;
 					r_pre = 1;
 				}
@@ -197,11 +271,13 @@ namespace Progra_IA_1
 				Console.WriteLine("r_pre");
 				if (e.Result.Text == "Si")
 				{
-					synthesizer.SpeakAsync("Iniciando el juego");
+					//synthesizer.SpeakAsync("Iniciando el juego");
 					r_pre = 0;
 					r_sta = 1;
+                    restart_game_info();
+                    Console.WriteLine("game info");
 					initialize_board_logic();
-					synthesizer.SpeakAsync("Mueva el punto de inicio de la partida, si lo desea ahí diga, listo");
+					synthesizer.SpeakAsync("Laika quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
 					r_row = 0;
 					r_sta = 1;
 					Console.WriteLine("TUPI");
@@ -212,7 +288,7 @@ namespace Progra_IA_1
 				}
 				else if (e.Result.Text == "No")
 				{
-					synthesizer.SpeakAsync("Cual seria el tamaño de cada cuadro, diga solo 1 número");
+					synthesizer.SpeakAsync("Laika quiere saber el tamaño de cada cuadro, dí solo 1 número");
 					recognizer.LoadGrammarAsync(new DictationGrammar()); // put all together
 					r_pre = 0;
 					r_squ = 1;
@@ -224,14 +300,14 @@ namespace Progra_IA_1
 				int number = from_number_str_to_int(e.Result.Text);
 				if (number < 20 && number != -1)
 				{
-					synthesizer.SpeakAsync("El número debe ser mayor o igual a 20");
+					synthesizer.SpeakAsync("Laika está enojada, no puedes elegir números menores a 20");
 				}
 				else if (number >= 20)
 				{
-					synthesizer.SpeakAsync("El número del tamaño del cuadro es");
+					synthesizer.SpeakAsync("Laika dice que el número del tamaño del cuadro es");
 					synthesizer.SpeakAsync(number.ToString());
 					a = number;
-					synthesizer.SpeakAsync("Cuántas columnas desea en el tablero?");
+					synthesizer.SpeakAsync("Laika quiere saber cuántas columnas deseas en el tablero?");
 					r_squ = 0;
 					r_col = 1;
 				}
@@ -242,15 +318,15 @@ namespace Progra_IA_1
 				int number = from_number_str_to_int(e.Result.Text);
 				if (number < 3 && number != -1)
 				{
-					synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
+					synthesizer.SpeakAsync("Laika está enojada, no puedes elegir números menores a tres");
 
 				}
 				else if (number >= 3)
 				{
-					synthesizer.SpeakAsync("La cantidad de columnas son:");
+					synthesizer.SpeakAsync("Laika dice que la cantidad de columnas es:");
 					synthesizer.SpeakAsync(number.ToString());
 					m = number;
-					synthesizer.SpeakAsync("Cuántas filas desea en el tablero?");
+					synthesizer.SpeakAsync("Laika quiere saber cuántas filas deseas en el tablero?");
 					r_col = 0;
 					r_row = 1;
 				}
@@ -261,26 +337,27 @@ namespace Progra_IA_1
 				int number = from_number_str_to_int(e.Result.Text);
 				if (number < 3 && number != -1)
 				{
-					synthesizer.SpeakAsync("El número debe ser mayor o igual a tres");
+					synthesizer.SpeakAsync("Laika está enojada, no puedes elegir números menores a tres");
 
 				}
 				else if (number >= 3)
 				{
-					synthesizer.SpeakAsync("La cantidad de filas son:");
+					synthesizer.SpeakAsync("Laika dice que la cantidad de filas son:");
 					synthesizer.SpeakAsync(number.ToString());
 					n = number;
 					initialize_board_logic();
-					synthesizer.SpeakAsync("Mueva el punto de inicio de la partida, si lo desea ahí diga, listo");
+					synthesizer.SpeakAsync("Laika quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
 					r_row = 0;
 					r_sta = 1;
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
-					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackColor = Color.Green;
+					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Laika_Dog1;
 
 				}
 			}
 			else if (r_sta == 1) {
+                synthesizer.SpeakAsync("cambiando inicio jeje");
 				
 				if ((e.Result.Text == "Arriba") || (e.Result.Text == "Abajo") || (e.Result.Text == "Izquierda") || (e.Result.Text == "Derecha"))
 				{
@@ -289,14 +366,14 @@ namespace Progra_IA_1
 				else if (e.Result.Text == "Listo")
 				{
 					if (its_obstacle(initial_point.Position_X, initial_point.Position_Y)) {
-						synthesizer.SpeakAsync("El punto inicial no es un lugar válido, cambie la posición con los comandos dados anteriormente."); 
+						synthesizer.SpeakAsync("Laika está enojada, el punto inicial no es un lugar válido, cambia la posición con los comandos dados anteriormente."); 
 					}
 					else {
-						synthesizer.SpeakAsync("Mueva el punto final de la partida, si lo desea ahí diga, listo");
+						synthesizer.SpeakAsync("Laika quiere que muevas el punto final de la partida, si lo deseas ahí dí la palabra, listo");
 						r_sta = 0;
 						r_end = 1; 
 						final_point = search_final_valid_position();
-						this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackColor = Color.Green;
+						this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Bone;
 					}
 				}
 			}
@@ -311,11 +388,11 @@ namespace Progra_IA_1
 				{
 					if (its_obstacle(final_point.Position_X, final_point.Position_Y))
 					{
-						synthesizer.SpeakAsync("El punto final no es un lugar válido, cambie la posición con los comandos dados anteriormente.");
+						synthesizer.SpeakAsync("Laika está enojada, el punto final no es un lugar válido, cambia la posición con los comandos dados anteriormente.");
 					}
 					else
 					{
-						synthesizer.SpeakAsync("Finalmente, desea que se utilicen diagonales en la respuesta del juego? Responda si o no.");
+						synthesizer.SpeakAsync("Laika quiere saber si deseas que se utilicen diagonales en la respuesta del juego? Responde si o no.");
 						r_end = 0;
 						r_dia = 1;
 					}
@@ -326,20 +403,40 @@ namespace Progra_IA_1
 				if (e.Result.Text == "Si")
 				{
 					flag_diag = true;
-					synthesizer.SpeakAsync("Las diagonales son permitidas, iniciando el juego");
-					r_dia = 0;
-					run_a();
+					synthesizer.SpeakAsync("Laika dice que las diagonales son permitidas");
 				}
 
 				else if (e.Result.Text == "No")
 				{
 					flag_diag = false;
-					synthesizer.SpeakAsync("Las diagonales no son permitidas, iniciando el juego");
-					r_dia = 0;
-					run_a();
+					synthesizer.SpeakAsync("Laika dice que las diagonales no son permitidas");
 				}
-			}
-
+                r_dia = 0;
+                r_cha = 1;
+				run_a(); 
+                synthesizer.SpeakAsync("Laika quiere saber si deseas cambiar las posiciones o jugar de nuevo, di cambiar o limpiar");
+            }
+            else if (r_cha == 1)
+            {
+                synthesizer.SpeakAsync("pruebita");
+                if (e.Result.Text == "Cambiar")
+				{
+                    synthesizer.SpeakAsync("entendio cambiar");
+                    clean_path();
+					activate_flag_positions();
+				}
+                else if (e.Result.Text == "Limpiar")
+                {
+                    synthesizer.SpeakAsync("entendio limpiar");
+                    restart_flags();
+                }
+                else
+                {
+                    synthesizer.SpeakAsync("no entendio");
+                }
+       
+            }
+                
 		}
 
 		private void run_a() {
@@ -352,7 +449,7 @@ namespace Progra_IA_1
 			int size_path;
 			try
 			{
-				size_path = path.Count;
+				size_path = path.Count-1;
 			}
 			catch (Exception ex)
 			{
@@ -364,7 +461,7 @@ namespace Progra_IA_1
 			{
 				Node n = path.Pop();
 				Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
-				this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackColor = Color.Violet;
+				this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Bone;
 			}
 		}
 
@@ -410,47 +507,51 @@ namespace Progra_IA_1
 			for (int i = 0; i < tuple_list_obstacles.Count; i++)
 			{
 				Tuple<int, int> tuple = tuple_list_obstacles.ElementAt(i);
-				this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackColor = Color.Black;	
+				this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackgroundImage = Progra_IA_1.Properties.Resources.Obstacle;	
 			}
 
 		}
 
 
-		private Node search_initial_valid_position () {
-			for (int i = 0; i < n; i++)
-			{
-				for (int j = 0; j < m; j++)
-				{
-					Node eval = logic_board[i][j];
-					if (eval.Traversable == true) {
-						return eval;
-					}
+		private Node search_initial_valid_position () 
+        {
+			int x_position;
+            int y_position;
+            Node eval;
+            while (true)
+            {
+                x_position = rand.Next(n);
+                y_position = rand.Next(m);
+                eval = logic_board[x_position][y_position];
+				if (eval.Traversable == true) {
+					return eval;
 				}
-			}
-			return null; 
+            }
+            
 		}
 
 		private Node search_final_valid_position()
 		{
-			for (int i = n-1; i >= 0; i--)
-			{
-				for (int j = m-1; j >= 0; j--)
-				{
-					Node eval = logic_board.ElementAt(i).ElementAt(j);
-					if (eval.Traversable == true)
-					{
-						return eval;
-					}
-				}
-			}
-			return null;
+            int x_position;
+            int y_position;
+            Node eval;
+            while (true)
+            {
+                x_position = rand.Next(n);
+                y_position = rand.Next(m);
+                eval = logic_board.ElementAt(x_position).ElementAt(y_position);
+			    if (eval.Traversable == true && eval != initial_point) //the final position and the initial position can't be the same
+			    {
+				    return eval;
+			    }
+            }
 		}
 
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			Choices commands = new Choices();
-			commands.Add(new string[] {"Iniciar", "Terminar", "Si", "No", "Limpiar", "Arriba", "Abajo", "Izquierda", "Derecha", "Listo"});
+			commands.Add(new string[] {"Iniciar", "Terminar", "Si", "No", "Limpiar", "Arriba", "Abajo", "Izquierda", "Derecha", "Listo", "Cambiar"});
 			GrammarBuilder gBuilder = new GrammarBuilder();
 			gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
 			gBuilder.Append(commands);
@@ -460,7 +561,7 @@ namespace Progra_IA_1
 			recognizer.LoadGrammarAsync(grammar); // put all together
 			recognizer.RecognizeAsync(RecognizeMode.Multiple);
 			synthesizer.SpeakAsync("Bienvenido al juego, para jugar diga iniciar, o terminar para cerrar la aplicación");
-			r_init = 1;
+			restart_flags();
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
 		}
 
