@@ -102,5 +102,20 @@
   <ItemGroup>
     <None Include="Resources\yellow_square.PNG" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bone.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Laika_Animation.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Laika_Dog1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Obstacle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tree.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

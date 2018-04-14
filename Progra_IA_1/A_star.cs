@@ -101,7 +101,7 @@ namespace Progra_IA_1
                         {
                             n.Parent = current;
 
-                            /* Get heuristic value */
+                            /* Get cost values */
 
                             /* Case algorithm include diagonal*/
                             if (diagonal_flag)
