@@ -357,9 +357,7 @@ namespace Progra_IA_1
 				}
 			}
 			else if (r_sta == 1) {
-                synthesizer.SpeakAsync("cambiando inicio jeje");
-				
-				if ((e.Result.Text == "Arriba") || (e.Result.Text == "Abajo") || (e.Result.Text == "Izquierda") || (e.Result.Text == "Derecha"))
+                if ((e.Result.Text == "Arriba") || (e.Result.Text == "Abajo") || (e.Result.Text == "Izquierda") || (e.Result.Text == "Derecha"))
 				{
 					initial_point = check_position(initial_point.Position_X, initial_point.Position_Y, e.Result.Text); 
 				}
@@ -418,21 +416,16 @@ namespace Progra_IA_1
             }
             else if (r_cha == 1)
             {
-                synthesizer.SpeakAsync("pruebita");
+                
                 if (e.Result.Text == "Cambiar")
 				{
-                    synthesizer.SpeakAsync("entendio cambiar");
                     clean_path();
 					activate_flag_positions();
 				}
                 else if (e.Result.Text == "Limpiar")
                 {
-                    synthesizer.SpeakAsync("entendio limpiar");
+                    
                     restart_flags();
-                }
-                else
-                {
-                    synthesizer.SpeakAsync("no entendio");
                 }
        
             }
