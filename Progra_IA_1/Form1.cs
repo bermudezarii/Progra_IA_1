@@ -248,6 +248,7 @@ namespace Progra_IA_1
 			board.Visible = true;
 			board.AutoSize = true;
 			this.board.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
 		}
 
 		
@@ -438,6 +439,7 @@ namespace Progra_IA_1
                 {
                     
                     restart_flags();
+                    restart_game_info();
                 }
        
             }
