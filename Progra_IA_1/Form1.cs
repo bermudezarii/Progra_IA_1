@@ -59,12 +59,15 @@ namespace Progra_IA_1
 		int r_rea; // means ready
         int r_cha; // means change
         int r_clean; // means clean actual path
+      
 		
         public Form1()
 		{
 			InitializeComponent();
 			
             this.Text = "El juego de Laika";
+
+            //this.Icon = new Icon("Resources/Laika_Dog1.ico");
 
 			panel1.VerticalScroll.Enabled = true;
 			panel1.VerticalScroll.Visible = true; 
@@ -96,6 +99,7 @@ namespace Progra_IA_1
 		    r_dia = 0;
 		    r_rea = 0;
             r_cha = 0;
+            r_clean = 0;
         }
 
         private void activate_flag_positions()
@@ -110,6 +114,7 @@ namespace Progra_IA_1
 		    r_dia = 0;
 		    r_rea = 0;
             r_cha = 0;
+            r_clean = 1;
         }
 
 		private int from_number_str_to_int(string str) {
@@ -156,19 +161,21 @@ namespace Progra_IA_1
 				answer = logic_board[new_x][new_y];
 				if (its_obstacle(x, y))
 				{
-					this.board.GetControlFromPosition(y, x).BackgroundImage = Progra_IA_1.Properties.Resources.Obstacle;
+					this.board.GetControlFromPosition(y, x).BackColor = Color.Black;
 				}
-				else {
-					this.board.GetControlFromPosition(y, x).BackgroundImage = Progra_IA_1.Properties.Resources.Three;
-				}
+				else 
+                {
+					this.board.GetControlFromPosition(y, x).BackColor = Color.White;
+                }
+
 				if (its_obstacle(new_x, new_y))
 				{
                     //I need to change this, go to the next valid position
-					this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = Progra_IA_1.Properties.Resources.Obstacle;
+					this.board.GetControlFromPosition(new_y, new_x).BackColor = Color.Red;
 				}
 				else
 				{
-					this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = Progra_IA_1.Properties.Resources.Three;
+					this.board.GetControlFromPosition(new_y, new_x).BackColor = Color.Green;
 				}
 				return answer; 
 			}
@@ -195,9 +202,10 @@ namespace Progra_IA_1
 			{
                 for (int y = 0; y < m; y++)
                     {
-                        if (this.board.GetControlFromPosition(y, x).BackgroundImage == Progra_IA_1.Properties.Resources.Bone)
+                        if (this.board.GetControlFromPosition(y, x).BackColor == Color.Violet)
                         {
-                           this.board.GetControlFromPosition(y, x).BackgroundImage = Progra_IA_1.Properties.Resources.Three;
+                           this.board.GetControlFromPosition(y, x).BackColor = Color.White;
+                            
                         }
                     }
 				
@@ -239,7 +247,6 @@ namespace Progra_IA_1
 			board.Visible = true;
 			board.AutoSize = true;
 			this.board.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			Console.WriteLine("ya lo setie ):");
 		}
 
 		
@@ -271,7 +278,7 @@ namespace Progra_IA_1
 				Console.WriteLine("r_pre");
 				if (e.Result.Text == "Si")
 				{
-					//synthesizer.SpeakAsync("Iniciando el juego");
+					
 					r_pre = 0;
 					r_sta = 1;
                     restart_game_info();
@@ -283,7 +290,8 @@ namespace Progra_IA_1
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
-					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackColor = Color.Green;
+                  
+					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Laika_Dog1;
 
 				}
 				else if (e.Result.Text == "No")
@@ -352,7 +360,7 @@ namespace Progra_IA_1
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
-					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Laika_Dog1;
+					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackColor = Color.Green;
 
 				}
 			}
@@ -370,8 +378,11 @@ namespace Progra_IA_1
 						synthesizer.SpeakAsync("Laika quiere que muevas el punto final de la partida, si lo deseas ahí dí la palabra, listo");
 						r_sta = 0;
 						r_end = 1; 
-						final_point = search_final_valid_position();
-						this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Bone;
+                        if (r_clean == 0)
+                        {
+                            final_point = search_final_valid_position();
+                        }
+                        this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackColor = Color.Green;
 					}
 				}
 			}
@@ -454,7 +465,7 @@ namespace Progra_IA_1
 			{
 				Node n = path.Pop();
 				Console.WriteLine("X: " + n.Position_X + ", Y: " + n.Position_Y);
-				this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Bone;
+				this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackColor = Color.Violet;
 			}
 		}
 
@@ -500,7 +511,7 @@ namespace Progra_IA_1
 			for (int i = 0; i < tuple_list_obstacles.Count; i++)
 			{
 				Tuple<int, int> tuple = tuple_list_obstacles.ElementAt(i);
-				this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackgroundImage = Progra_IA_1.Properties.Resources.Obstacle;	
+				this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackColor = Color.Black;	
 			}
 
 		}
@@ -553,7 +564,7 @@ namespace Progra_IA_1
 			synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult, 0,CultureInfo.GetCultureInfo("es-ES"));
 			recognizer.LoadGrammarAsync(grammar); // put all together
 			recognizer.RecognizeAsync(RecognizeMode.Multiple);
-			synthesizer.SpeakAsync("Bienvenido al juego, para jugar diga iniciar, o terminar para cerrar la aplicación");
+			synthesizer.SpeakAsync("Bienvenido al juego de Laika, Laika quiere que digas Iniciar para jugar o Terminar para salir del juego");
 			restart_flags();
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
 		}
