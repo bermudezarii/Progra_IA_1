@@ -103,9 +103,6 @@
     <None Include="Resources\yellow_square.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Bone.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Laika_Animation1.gif" />
   </ItemGroup>
   <ItemGroup>
@@ -115,13 +112,19 @@
     <None Include="Resources\Laika_Dog1.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Laika_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Laika_Dog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bone.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\Obstacle.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Tree.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Laika_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

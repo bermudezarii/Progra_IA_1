@@ -13,6 +13,8 @@ namespace Progra_IA_1
         public int Position_X { get; set; }
         public int Position_Y { get; set; }
 
+        public bool IsPath { get; set; }
+
         public double H_cost { get; set; }
 
         public double G_cost { get; set; }
