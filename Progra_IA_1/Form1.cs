@@ -290,8 +290,8 @@ namespace Progra_IA_1
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
-                  
-					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Laika_Dog1;
+
+                    this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = Progra_IA_1.Properties.Resources.Laika_Dog1;
 
 				}
 				else if (e.Result.Text == "No")
