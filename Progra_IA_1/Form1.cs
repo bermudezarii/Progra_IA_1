@@ -292,7 +292,6 @@ namespace Progra_IA_1
 					Console.WriteLine("TUPI");
 					Console.WriteLine("r_sta");
 					initial_point = search_initial_valid_position();
-                  
 					this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackColor = Color.Green;
 
 				}
