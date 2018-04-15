@@ -93,6 +93,16 @@ namespace Progra_IA_1.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap imagenPrueba {
+            get {
+                object obj = ResourceManager.GetObject("imagenPrueba", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Laika_Animation {
             get {
                 object obj = ResourceManager.GetObject("Laika_Animation", resourceCulture);
