@@ -52,7 +52,7 @@
             this.board.RowCount = 1;
             this.board.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 396F));
-            this.board.Size = new System.Drawing.Size(421, 396);
+            this.board.Size = new System.Drawing.Size(157, 148);
             this.board.TabIndex = 0;
             this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
             // 

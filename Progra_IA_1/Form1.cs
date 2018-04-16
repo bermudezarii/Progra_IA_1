@@ -27,8 +27,10 @@ namespace Progra_IA_1
         int[] number = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 
         // board game info (: 
-        // a is the size of each square
+        // a is the size of each square at the visual board
         int a;
+        //a_ is the size og each square at the logical board
+        int a_;
         // m is the total columns the player wants in the board
         int m;
         // n is the total rows the player wants in the board
@@ -112,6 +114,8 @@ namespace Progra_IA_1
             r_cha = 0;
             r_clean = 0;
 
+            a = 60;
+
             show_git();
 
         }
@@ -185,6 +189,11 @@ namespace Progra_IA_1
 
             Console.WriteLine("new point " + new_x.ToString() + " " + new_y.ToString() + " move: " + move);
             Node answer;
+            bool flag = true;
+            while (flag)
+            {
+
+            }
             if (new_x < n && new_y < m && new_x > -1 && new_y > -1) // ponerle los ceros 
             {
                 answer = logic_board[new_x][new_y];
@@ -359,7 +368,7 @@ namespace Progra_IA_1
                 {
                     synthesizer.SpeakAsync("Laika dice que el número del tamaño del cuadro es");
                     synthesizer.SpeakAsync(number.ToString());
-                    a = number;
+                    a_ = number;
                     synthesizer.SpeakAsync("Laika quiere saber cuántas columnas deseas en el tablero?");
                     r_squ = 0;
                     r_col = 1;
@@ -497,7 +506,7 @@ namespace Progra_IA_1
 
         private void run_a()
         {
-            A_star a_star = new A_star(logic_board, flag_diag, a);
+            A_star a_star = new A_star(logic_board, flag_diag, a_);
             var watch = System.Diagnostics.Stopwatch.StartNew();
             Stack<Node> path = a_star.Find_path(initial_point.Position_X, initial_point.Position_Y, final_point.Position_X, final_point.Position_Y);
             watch.Stop();
