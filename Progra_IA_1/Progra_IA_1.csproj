@@ -44,6 +44,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="XamlAnimatedGif, Version=1.1.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XamlAnimatedGif.1.1.10\lib\net45\XamlAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="A_star.cs" />
@@ -72,6 +75,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -112,19 +116,31 @@
     <None Include="Resources\Laika_Dog1.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Laika_icon.ico" />
+    <None Include="Resources\Tree.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Laika_Dog.png" />
+    <None Include="Resources\Laika_Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Bone.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Bone_Path.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\Obstacle.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Tree.png" />
+    <None Include="Resources\Grass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Laika_Dog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Laika_Animation.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Laika_Animation3.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

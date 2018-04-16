@@ -68,7 +68,7 @@ namespace Progra_IA_1
 
             this.Text = "El juego de Laika";
             this.BackColor = Color.White;
-
+            
             //this.Icon = new Icon("Resources/Laika_Dog.ico");
 
             panel1.VerticalScroll.Enabled = true;
@@ -78,15 +78,24 @@ namespace Progra_IA_1
 
         }
 
+        private void center_panel()
+        {
+            
+           
+            
+        }
+
+
         private void restart_game_info()
         {
-            a = 50;
+            a = 60;
             m = 10;
             n = 10;
             perc_obst = 20;
             flag_diag = false;
             tuple_list_obstacles = new List<Tuple<int, int>>();
             logic_board = new List<List<Node>>();
+           // center_panel();
         }
 
         private void restart_flags()
@@ -102,6 +111,16 @@ namespace Progra_IA_1
             r_rea = 0;
             r_cha = 0;
             r_clean = 0;
+
+            show_git();
+
+        }
+
+        private void show_git()
+        {
+            this.pictureBox1.Visible = true;
+            this.pictureBox1.Image = Progra_IA_1.Properties.Resources.Laika_Animation3;
+            this.pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
         }
 
         private void activate_flag_positions()
@@ -143,9 +162,9 @@ namespace Progra_IA_1
 
         private Image resize_image(Image image)
         {
-            Size a_ = new Size(a - 5, a - 5);
-            Image p = (Image)new Bitmap(image, a_);
-            return p;
+            Size new_size = new Size((int)(a - a*0.13), (int)(a - a * 0.13));
+            Image new_image = (Image)new Bitmap(image, new_size);
+            return new_image;
         }
 
         private Node check_position(int x, int y, string move)
@@ -175,7 +194,7 @@ namespace Progra_IA_1
                 }
                 else
                 {
-                    this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Tree);
+                    this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Grass);
                 }
 
                 if (its_obstacle(new_x, new_y))
@@ -224,7 +243,7 @@ namespace Progra_IA_1
                     {
 
                         logic_board.ElementAt(x).ElementAt(y).IsPath = false;
-                        this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Tree);
+                        this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Grass);
 
                     }
                 }
@@ -238,7 +257,7 @@ namespace Progra_IA_1
         private void set_visual_board()
         {
 
-
+            this.pictureBox1.Visible = false;
             this.board.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             board.RowStyles.Clear();
             board.ColumnStyles.Clear();
@@ -265,7 +284,7 @@ namespace Progra_IA_1
                 for (int j = 0; j < m; j++)
                 {
                     this.board.Controls.Add(new Panel { Dock = DockStyle.Fill }, j, i);
-                    this.board.GetControlFromPosition(j, i).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Tree);
+                    this.board.GetControlFromPosition(j, i).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Grass);
                 }
             }
             board.ResumeLayout();
@@ -316,7 +335,7 @@ namespace Progra_IA_1
                     initial_point = search_initial_valid_position();
 
                     this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Laika_Dog);
-
+                    
 
 
                 }
@@ -497,8 +516,9 @@ namespace Progra_IA_1
             }
             for (int i = 0; i < size_path; i++)
             {
+                
                 Node n = path.Pop();
-                this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Bone);
+                this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Bone_Path);
                 logic_board.ElementAt(n.Position_X).ElementAt(n.Position_Y).IsPath = true;
             }
         }

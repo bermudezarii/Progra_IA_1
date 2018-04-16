@@ -73,6 +73,26 @@ namespace Progra_IA_1.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Bone_Path {
+            get {
+                object obj = ResourceManager.GetObject("Bone_Path", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Grass {
+            get {
+                object obj = ResourceManager.GetObject("Grass", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap gray_square {
             get {
                 object obj = ResourceManager.GetObject("gray_square", resourceCulture);
@@ -93,6 +113,16 @@ namespace Progra_IA_1.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Laika_Animation {
+            get {
+                object obj = ResourceManager.GetObject("Laika_Animation", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Laika_Animation1 {
             get {
                 object obj = ResourceManager.GetObject("Laika_Animation1", resourceCulture);
@@ -106,6 +136,16 @@ namespace Progra_IA_1.Properties {
         internal static System.Drawing.Bitmap Laika_Animation2 {
             get {
                 object obj = ResourceManager.GetObject("Laika_Animation2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Laika_Animation3 {
+            get {
+                object obj = ResourceManager.GetObject("Laika_Animation3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
