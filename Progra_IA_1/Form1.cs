@@ -311,7 +311,8 @@ namespace Progra_IA_1
             }
             else if (r_init == 1)
             {
-                Console.WriteLine("r_init");
+				this.Size = new Size(500, 500);
+				Console.WriteLine("r_init");
                 if (e.Result.Text == "Iniciar")
                 {
 
@@ -636,7 +637,8 @@ namespace Progra_IA_1
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
             synthesizer.SpeakAsync("Bienvenido al juego de Laika, Laika quiere que digas Iniciar para jugar o Terminar para salir del juego");
             restart_flags();
-            recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
+			this.Size = new Size(500, 500);
+			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
         }
 
         private void board_Paint(object sender, PaintEventArgs e)
