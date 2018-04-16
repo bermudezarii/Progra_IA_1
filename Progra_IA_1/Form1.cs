@@ -93,6 +93,7 @@ namespace Progra_IA_1
             a = 60;
             m = 10;
             n = 10;
+            a_ = 60;
             perc_obst = 20;
             flag_diag = false;
             tuple_list_obstacles = new List<Tuple<int, int>>();
