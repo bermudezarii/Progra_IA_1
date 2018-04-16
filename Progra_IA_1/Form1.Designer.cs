@@ -49,7 +49,7 @@
 			this.board.Name = "board";
 			this.board.RowCount = 1;
 			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 182F));
+			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 750F));
 			this.board.Size = new System.Drawing.Size(901, 750);
 			this.board.TabIndex = 0;
 			this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
@@ -75,7 +75,7 @@
 			this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.pictureBox1.InitialImage = global::Progra_IA_1.Properties.Resources.Laika_Animation;
 			this.pictureBox1.Location = new System.Drawing.Point(96, 63);
-			this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(699, 580);
 			this.pictureBox1.TabIndex = 1;
@@ -87,6 +87,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
 			this.AutoSize = true;
+			this.BackColor = System.Drawing.Color.LavenderBlush;
 			this.ClientSize = new System.Drawing.Size(901, 750);
 			this.Controls.Add(this.panel1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

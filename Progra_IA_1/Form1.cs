@@ -196,27 +196,27 @@ namespace Progra_IA_1
                 answer = logic_board[new_x][new_y];
                 if (its_obstacle(x, y))
                 {
-                    this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Obstacle);
+                    this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.caquita);
                 }
                 else
                 {
-                    this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Grass);
+                    this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.paw);
                 }
 
                 if (its_obstacle(new_x, new_y))
                 {
                     //I need to change this, go to the next valid position
-                    this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Obstacle);
+                    this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.caquita);
                 }
                 else
                 {
                     if (r_sta == 1)
                     {
-                        this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Laika_Dog);
+                        this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.laika);
                     }
                     else
                     {
-                        this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Bone);
+                        this.board.GetControlFromPosition(new_y, new_x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.house);
                     }
 
                 }
@@ -249,7 +249,7 @@ namespace Progra_IA_1
                     {
 
                         logic_board.ElementAt(x).ElementAt(y).IsPath = false;
-                        this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Grass);
+                        this.board.GetControlFromPosition(y, x).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.paw);
 
                     }
                 }
@@ -290,7 +290,7 @@ namespace Progra_IA_1
                 for (int j = 0; j < m; j++)
                 {
                     this.board.Controls.Add(new Panel { Dock = DockStyle.Fill }, j, i);
-                    this.board.GetControlFromPosition(j, i).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Grass);
+                    this.board.GetControlFromPosition(j, i).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.paw);
                 }
             }
             board.ResumeLayout();
@@ -342,7 +342,7 @@ namespace Progra_IA_1
                     Console.WriteLine("r_sta");
                     initial_point = search_initial_valid_position();
 
-                    this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Laika_Dog);
+                    this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.laika);
                     
 
 
@@ -413,7 +413,7 @@ namespace Progra_IA_1
                     Console.WriteLine("r_sta");
                     initial_point = search_initial_valid_position();
 
-                    this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Laika_Dog);
+                    this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.laika);
 
                 }
             }
@@ -438,7 +438,7 @@ namespace Progra_IA_1
                         {
                             final_point = search_final_valid_position();
                         }
-                        this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Bone);
+                        this.board.GetControlFromPosition(final_point.Position_Y, final_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.house);
                     }
                 }
             }
@@ -526,7 +526,7 @@ namespace Progra_IA_1
             {
                 
                 Node n = path.Pop();
-                this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Bone_Path);
+                this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.bones);
                 logic_board.ElementAt(n.Position_X).ElementAt(n.Position_Y).IsPath = true;
             }
             path.Pop();
@@ -580,7 +580,7 @@ namespace Progra_IA_1
             for (int i = 0; i < tuple_list_obstacles.Count; i++)
             {
                 Tuple<int, int> tuple = tuple_list_obstacles.ElementAt(i);
-                this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Obstacle);
+                this.board.GetControlFromPosition(tuple.Item2, tuple.Item1).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.caquita);
 
             }
 
@@ -635,7 +635,7 @@ namespace Progra_IA_1
             synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Child, 0, CultureInfo.GetCultureInfo("es-ES"));
             recognizer.LoadGrammarAsync(grammar); // put all together
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
-            synthesizer.SpeakAsync("Bienvenido al juego de Laika, Laika quiere que digas Iniciar para jugar o Terminar para salir del juego");
+            synthesizer.SpeakAsync("Bienvenido a mi juego, yo soy Laika, me comunico a traves de mi traductor canino debajo de mi pañoleta, te dejo con mi traductor, Laika quiere que para empezar diga Iniciar, para jugar, o Terminar para salir del juego");
             restart_flags();
 			this.Size = new Size(500, 500);
 			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
