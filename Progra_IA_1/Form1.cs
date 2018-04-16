@@ -29,7 +29,7 @@ namespace Progra_IA_1
         // board game info (: 
         // a is the size of each square at the visual board
         int a;
-        //a_ is the size og each square at the logical board
+        //a_ is the size of each square at the logical board, necessary for A*
         int a_;
         // m is the total columns the player wants in the board
         int m;
@@ -39,7 +39,7 @@ namespace Progra_IA_1
         Node initial_point;
         // final point
         Node final_point;
-        //percent of obstacles 
+        //percent of obstacles in the board
         int perc_obst;
         // flag if they want diagonals to work
         bool flag_diag;
@@ -70,7 +70,7 @@ namespace Progra_IA_1
 
             this.Text = "El juego de Laika";
             this.BackColor = Color.White;
-            
+
             //this.Icon = new Icon("Resources/Laika_Dog.ico");
 
             panel1.VerticalScroll.Enabled = true;
@@ -80,14 +80,10 @@ namespace Progra_IA_1
 
         }
 
-        private void center_panel()
-        {
-           
-          
-
-        }
-
-
+        /********************************************************
+         *Function that restart the game information to the     *
+         *prestablished parameters
+         ********************************************************/
         private void restart_game_info()
         {
             a = 60;
@@ -98,9 +94,10 @@ namespace Progra_IA_1
             flag_diag = false;
             tuple_list_obstacles = new List<Tuple<int, int>>();
             logic_board = new List<List<Node>>();
-            center_panel();
         }
-
+        /********************************************************
+         *Function that restart the flags to start the game again
+        ********************************************************/
         private void restart_flags()
         {
             r_init = 1;
@@ -121,6 +118,10 @@ namespace Progra_IA_1
 
         }
 
+        /********************************************************
+        *Function that show the initial image at the game, the 
+        * Laika Gif Animation
+        ********************************************************/
         private void show_git()
         {
             this.pictureBox1.Visible = true;
@@ -128,6 +129,10 @@ namespace Progra_IA_1
             this.pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
         }
 
+        /********************************************************
+       *Function that restart the flags to change the initial
+       * position at the game
+       ********************************************************/
         private void activate_flag_positions()
         {
             r_init = 0;
@@ -143,6 +148,9 @@ namespace Progra_IA_1
             r_clean = 1;
         }
 
+        /********************************************************
+       *Function that convert a string number in a integer
+       ********************************************************/
         private int from_number_str_to_int(string str)
         {
             Console.WriteLine("str_int");
@@ -165,13 +173,23 @@ namespace Progra_IA_1
             return x;
         }
 
+        /********************************************************
+           *Function that resize the image to show it at the board
+           ********************************************************/
         private Image resize_image(Image image)
         {
-            Size new_size = new Size((int)(a - a*0.13), (int)(a - a * 0.13));
+            Size new_size = new Size((int)(a - a * 0.10), (int)(a - a * 0.10));
             Image new_image = (Image)new Bitmap(image, new_size);
             return new_image;
         }
 
+        /********************************************************
+         *Function that check if the new position is posssible
+         * Parameters:
+         * x: row at the board
+         * y: colum at the board
+         * move: type of move, can be Up, Down, Left or Right
+         ********************************************************/
         private Node check_position(int x, int y, string move)
         {
             int new_x = x;
@@ -229,6 +247,10 @@ namespace Progra_IA_1
             }
         }
 
+        /********************************************************
+         *Function that clean the screen and erases the actual 
+         *board
+         ********************************************************/
         private void clean_board()
         {
             board.AutoScroll = true;
@@ -239,6 +261,9 @@ namespace Progra_IA_1
             board.Controls.Clear();
         }
 
+        /********************************************************
+        *Function that clean the actual path given for the A*
+        ********************************************************/
         private void clean_path()
         {
             for (int x = 0; x < n; x++)
@@ -259,7 +284,10 @@ namespace Progra_IA_1
             synthesizer.SpeakAsync("Laika quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
         }
 
-
+        /********************************************************
+        *Function that create the board with the parameters given
+        * by the user and puts the obstacles
+        ********************************************************/
         private void set_visual_board()
         {
 
@@ -296,11 +324,13 @@ namespace Progra_IA_1
             board.ResumeLayout();
             board.AutoSize = true;
             board.Visible = true;
-			this.Size = new Size(n*a, m*a);
-		}
+            this.Size = new Size(n * a, m * a);
+        }
 
 
-
+        /********************************************************
+        *Function that receive the parameters given by the user 
+        ********************************************************/
         private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
         {
             float confidence = e.Result.Confidence;
@@ -311,8 +341,8 @@ namespace Progra_IA_1
             }
             else if (r_init == 1)
             {
-				this.Size = new Size(500, 500);
-				Console.WriteLine("r_init");
+                this.Size = new Size(500, 500);
+                Console.WriteLine("r_init");
                 if (e.Result.Text == "Iniciar")
                 {
 
@@ -343,7 +373,7 @@ namespace Progra_IA_1
                     initial_point = search_initial_valid_position();
 
                     this.board.GetControlFromPosition(initial_point.Position_Y, initial_point.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.laika);
-                    
+
 
 
                 }
@@ -503,6 +533,10 @@ namespace Progra_IA_1
 
         }
 
+        /********************************************************
+        *Function that search the optimal path with the A*
+        * algorithm
+        ********************************************************/
         private void run_a()
         {
             A_star a_star = new A_star(logic_board, flag_diag, a_);
@@ -515,6 +549,14 @@ namespace Progra_IA_1
             try
             {
                 size_path = path.Count;
+                for (int i = 0; i < size_path - 1; i++)
+                {
+
+                    Node n = path.Pop();
+                    this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.bones);
+                    logic_board.ElementAt(n.Position_X).ElementAt(n.Position_Y).IsPath = true;
+                }
+                path.Pop();
             }
             catch (Exception ex)
             {
@@ -522,14 +564,8 @@ namespace Progra_IA_1
                 Console.WriteLine("No hay solucion");
                 synthesizer.SpeakAsync("No hay solucion");
             }
-            for (int i = 0; i < size_path-1; i++)
-            {
-                
-                Node n = path.Pop();
-                this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.bones);
-                logic_board.ElementAt(n.Position_X).ElementAt(n.Position_Y).IsPath = true;
-            }
-            path.Pop();
+
+
         }
 
         private bool assign_obstacle()
@@ -541,6 +577,12 @@ namespace Progra_IA_1
                 return false;
         }
 
+        /********************************************************
+        *Function that verify if the position is an obstacle
+        * Parameters:
+        * x: row
+        * y: column
+        ********************************************************/
         private bool its_obstacle(int x, int y)
         {
             bool traversable = logic_board.ElementAt(x).ElementAt(y).Traversable;
@@ -554,6 +596,10 @@ namespace Progra_IA_1
             }
         }
 
+        /********************************************************
+        *Function that initialize the logical board to manage the
+        * game
+        ********************************************************/
         private void initialize_board_logic()
         {
 
@@ -586,7 +632,9 @@ namespace Progra_IA_1
 
         }
 
-
+        /********************************************************
+        *Function that search the initial position for Laika
+        ********************************************************/
         private Node search_initial_valid_position()
         {
             int x_position;
@@ -605,6 +653,9 @@ namespace Progra_IA_1
 
         }
 
+        /********************************************************
+        *Function that search the final position for Laika's house
+        ********************************************************/
         private Node search_final_valid_position()
         {
             int x_position;
@@ -637,8 +688,8 @@ namespace Progra_IA_1
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
             synthesizer.SpeakAsync("Bienvenido a mi juego, yo soy Laika, me comunico a traves de mi traductor canino debajo de mi pañoleta, te dejo con mi traductor, Laika quiere que para empezar diga Iniciar, para jugar, o Terminar para salir del juego");
             restart_flags();
-			this.Size = new Size(500, 500);
-			recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
+            this.Size = new Size(500, 500);
+            recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
         }
 
         private void board_Paint(object sender, PaintEventArgs e)
@@ -651,5 +702,9 @@ namespace Progra_IA_1
 
         }
 
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
