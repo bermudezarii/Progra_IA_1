@@ -71,83 +71,76 @@ namespace Progra_IA_1
             Heap<Node> open_list = new Heap<Node>(max_size);
 
             /* close_list: Nodes already evaluate */
-            List<Node> close_list = new List<Node>();
+            HashSet<Node> close_list = new HashSet<Node>();
 
             /* adjacencies: Neighbors nodes of current node */
             List<Node> adjacencies;
 
             /* Add initial node to open_list */
-            Node current = start;
-            open_list.Add(current);
+            Node current;
+            open_list.Add(start);
             int round = 1;
 
-            /* Travel every node from open_list */
-            while (open_list.Count != 0 && !close_list.Exists(x => ((x.Position_X == end.Position_X) && (x.Position_Y == end.Position_Y))))
+            /* If not solution found, return null */
+            while(open_list.Count > 0)
             {
-                /* Assign current node and remove it from open_list */
-                current = open_list.Remove_first();
                 
-                /* Add element in close_list and get neighbor nodes */
+                current = open_list.Remove_first();
+
                 close_list.Add(current);
-                adjacencies = Get_adjacent_nodes(current);
-                Console.WriteLine(round);
-                foreach(Node n in adjacencies)
+                Console.WriteLine("Iteration " + round + ": Node to evaluate = (" + current.Position_X + ", " + current.Position_Y + ")");
+
+                if (current.Position_X == end.Position_X && current.Position_Y == end.Position_Y)
                 {
-                    /* Case node is obstacle or is not stored in close_list */
-                    if(!close_list.Contains(n) && n.Traversable)
+                    Node temp = current;
+                    while (temp != start && temp != null)
                     {
-                        /* Case node is not stored in open_list*/
-                        if(!open_list.Contains(n))
+                        path.Push(temp);
+                        temp = temp.Parent;
+                    }
+                    return path;
+                }
+
+                adjacencies = Get_adjacent_nodes(current);
+
+                foreach(Node neighbor in adjacencies)
+                {
+                    if(!neighbor.Traversable || close_list.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    if (!open_list.Contains(neighbor))
+                    {
+                        neighbor.Parent = current;
+
+                        if(diagonal_flag)
                         {
-                            n.Parent = current;
+                            neighbor.H_cost = Distance_diagonal(neighbor.Position_X, neighbor.Position_Y, end.Position_X, end.Position_Y);
 
-                            /* Get cost values */
-
-                            /* Case algorithm include diagonal*/
-                            if (diagonal_flag)
+                            if(neighbor.Parent.Position_X != neighbor.Position_X && neighbor.Position_Y != neighbor.Position_Y)
                             {
-                                n.H_cost = Distance_diagonal(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
-                                if(n.Parent.Position_X != n.Position_X && n.Parent.Position_Y != n.Position_Y)
-                                {
-                                    n.G_cost += hypotenuse + n.Parent.G_cost;
-                                }
-                                else
-                                {
-                                    n.G_cost += square_size + n.Parent.G_cost;
-                                }
-                                Console.WriteLine("(" + n.Position_X + ", " + n.Position_Y + ") =" + n.F_cost);
+                                neighbor.G_cost = hypotenuse + neighbor.Parent.G_cost;
                             }
-
                             else
                             {
-                                n.H_cost = Distance_manhattan(n.Position_X, n.Position_Y, end.Position_X, end.Position_Y);
-                                n.G_cost += square_size + n.Parent.G_cost;
+                                neighbor.G_cost = square_size + neighbor.Parent.G_cost;
                             }
-                            
-                            open_list.Add(n);
-
-                            /* Order open_list by f(n) = g(n) + h(n) */
-                            //open_list = open_list.OrderBy(node => node.F_cost).ToList();
                         }
+                        else
+                        {
+                            neighbor.H_cost = Distance_manhattan(neighbor.Position_X, neighbor.Position_Y, end.Position_X, end.Position_Y);
+                            neighbor.G_cost = square_size + neighbor.Parent.G_cost;
+                        }
+                        open_list.Add(neighbor);
+                        Console.WriteLine("(" + neighbor.Position_X + ", " + neighbor.Position_Y + "): " + neighbor.F_cost);
                     }
+                    
+
                 }
                 round++;
             }
-
-            /* Verify if final node is stored in close_list */
-            if(!close_list.Exists(x => ((x.Position_X == end.Position_X) && (x.Position_Y == end.Position_Y))))
-            {
-                return null;
-            }
-
-            /* Get the optimal path */
-            Node temp = close_list[close_list.IndexOf(current)];
-            while(temp != start && temp != null)
-            {
-                path.Push(temp);
-                temp = temp.Parent;
-            }
-            return path;
+            return null;            
         }
 
 
