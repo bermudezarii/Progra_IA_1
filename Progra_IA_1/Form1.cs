@@ -256,7 +256,7 @@ namespace Progra_IA_1
 
             }
 
-            synthesizer.SpeakAsync("Mueve el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
+            synthesizer.SpeakAsync("Laika quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
         }
 
 
@@ -303,8 +303,8 @@ namespace Progra_IA_1
         private void recognizer_speech_recognized(object sender, SpeechRecognizedEventArgs e)
         {
             float confidence = e.Result.Confidence;
-            Console.WriteLine("Luna entendió: " + e.Result.Text);
-            if (confidence < 0.30)
+            Console.WriteLine("Laika entendió: " + e.Result.Text);
+            if (confidence < 0.50)
             {
                 Console.WriteLine("Low confidence");
             }
@@ -314,13 +314,13 @@ namespace Progra_IA_1
                 if (e.Result.Text == "Iniciar")
                 {
 
-                    synthesizer.SpeakAsync("Quieres utilizar la configuración prestablecida para el juego, di si o no.");
+                    synthesizer.SpeakAsync("Laika pregunta si deseas utilizar la configuración prestablecida para el juego, di la palabra si o no.");
                     r_init = 0;
                     r_pre = 1;
                 }
                 else if (e.Result.Text == "Terminar")
                 {
-                    synthesizer.SpeakAsync("Te voy a echar de menos, vuelve pronto");
+                    synthesizer.SpeakAsync("Laika te va a echar de menos, vuelve pronto");
                     this.Close();
                 }
             }
@@ -334,7 +334,7 @@ namespace Progra_IA_1
                     r_sta = 1;
                     restart_game_info();
                     initialize_board_logic();
-                    synthesizer.SpeakAsync("Mueve el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
+                    synthesizer.SpeakAsync("Laika quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
                     r_row = 0;
                     r_sta = 1;
                     Console.WriteLine("r_sta");
@@ -347,7 +347,7 @@ namespace Progra_IA_1
                 }
                 else if (e.Result.Text == "No")
                 {
-                    synthesizer.SpeakAsync("Luna quiere saber el tamaño de cada cuadro, dí solo 1 número");
+                    synthesizer.SpeakAsync("Laika quiere saber el tamaño de cada cuadro, dí solo 1 número");
                     recognizer.LoadGrammarAsync(new DictationGrammar()); // put all together
                     r_pre = 0;
                     r_squ = 1;
@@ -359,14 +359,14 @@ namespace Progra_IA_1
                 int number = from_number_str_to_int(e.Result.Text);
                 if (number < 20 && number != -1)
                 {
-                    synthesizer.SpeakAsync("Luna está enojada, no puedes elegir números menores a 20");
+                    synthesizer.SpeakAsync("Laika está enojada, no puedes elegir números menores a 20");
                 }
                 else if (number >= 20)
                 {
-                    synthesizer.SpeakAsync("Luna dice que el número del tamaño del cuadro es");
+                    synthesizer.SpeakAsync("Laika dice que el número del tamaño del cuadro es");
                     synthesizer.SpeakAsync(number.ToString());
-                    a = number;
-                    synthesizer.SpeakAsync("Luna quiere saber cuántas columnas deseas en el tablero?");
+                    a_ = number;
+                    synthesizer.SpeakAsync("Laika quiere saber cuántas columnas deseas en el tablero?");
                     r_squ = 0;
                     r_col = 1;
                 }
@@ -377,15 +377,15 @@ namespace Progra_IA_1
                 int number = from_number_str_to_int(e.Result.Text);
                 if (number < 3 && number != -1)
                 {
-                    synthesizer.SpeakAsync("Luna está enojada, no puedes elegir números menores a tres");
+                    synthesizer.SpeakAsync("Laika está enojada, no puedes elegir números menores a tres");
 
                 }
                 else if (number >= 3)
                 {
-                    synthesizer.SpeakAsync("Luna dice: la cantidad de columnas es:");
+                    synthesizer.SpeakAsync("Laika dice que la cantidad de columnas es:");
                     synthesizer.SpeakAsync(number.ToString());
                     m = number;
-                    synthesizer.SpeakAsync("Luna quiere saber cuántas filas deseas en el tablero?");
+                    synthesizer.SpeakAsync("Laika quiere saber cuántas filas deseas en el tablero?");
                     r_col = 0;
                     r_row = 1;
                 }
@@ -396,16 +396,16 @@ namespace Progra_IA_1
                 int number = from_number_str_to_int(e.Result.Text);
                 if (number < 3 && number != -1)
                 {
-                    synthesizer.SpeakAsync("Luna está enojada, no puedes elegir números menores a tres");
+                    synthesizer.SpeakAsync("Laika está enojada, no puedes elegir números menores a tres");
 
                 }
                 else if (number >= 3)
                 {
-                    synthesizer.SpeakAsync("Luna dice que la cantidad de filas son:");
+                    synthesizer.SpeakAsync("Laika dice que la cantidad de filas son:");
                     synthesizer.SpeakAsync(number.ToString());
                     n = number;
                     initialize_board_logic();
-                    synthesizer.SpeakAsync("Luna quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
+                    synthesizer.SpeakAsync("Laika quiere que muevas el punto de inicio de la partida, si lo deseas ahí dí la palabra, listo");
                     r_row = 0;
                     r_sta = 1;
                     Console.WriteLine("r_sta");
@@ -425,11 +425,11 @@ namespace Progra_IA_1
                 {
                     if (its_obstacle(initial_point.Position_X, initial_point.Position_Y))
                     {
-                        synthesizer.SpeakAsync("Luna está enojada, el punto inicial no es un lugar válido, cambia la posición con los comandos dados anteriormente.");
+                        synthesizer.SpeakAsync("Laika está enojada, el punto inicial no es un lugar válido, cambia la posición con los comandos dados anteriormente.");
                     }
                     else
                     {
-                        synthesizer.SpeakAsync("Luna quiere que muevas el punto final de la partida, si lo deseas ahí dí la palabra, listo");
+                        synthesizer.SpeakAsync("Laika quiere que muevas el punto final de la partida, si lo deseas ahí dí la palabra, listo");
                         r_sta = 0;
                         r_end = 1;
                         if (r_clean == 0)
@@ -452,11 +452,11 @@ namespace Progra_IA_1
                 {
                     if (its_obstacle(final_point.Position_X, final_point.Position_Y))
                     {
-                        synthesizer.SpeakAsync("Luna está enojada, el punto final no es un lugar válido, cambia la posición con los comandos dados anteriormente.");
+                        synthesizer.SpeakAsync("Laika está enojada, el punto final no es un lugar válido, cambia la posición con los comandos dados anteriormente.");
                     }
                     else
                     {
-                        synthesizer.SpeakAsync("Luna quiere saber si deseas que se utilicen diagonales en la respuesta del juego? Responde si o no.");
+                        synthesizer.SpeakAsync("Laika quiere saber si deseas que se utilicen diagonales en la respuesta del juego? Responde si o no.");
                         r_end = 0;
                         r_dia = 1;
                     }
@@ -467,18 +467,18 @@ namespace Progra_IA_1
                 if (e.Result.Text == "Si")
                 {
                     flag_diag = true;
-                    synthesizer.SpeakAsync("Luna dice: las diagonales son permitidas");
+                    synthesizer.SpeakAsync("Laika dice que las diagonales son permitidas");
                 }
 
                 else if (e.Result.Text == "No")
                 {
                     flag_diag = false;
-                    synthesizer.SpeakAsync("Luna dice: las diagonales no son permitidas");
+                    synthesizer.SpeakAsync("Laika dice que las diagonales no son permitidas");
                 }
                 r_dia = 0;
                 r_cha = 1;
                 run_a();
-                synthesizer.SpeakAsync("Luna quiere saber si deseas cambiar las posiciones o jugar de nuevo, di cambiar o limpiar");
+                synthesizer.SpeakAsync("Laika quiere saber si deseas cambiar las posiciones o jugar de nuevo, di cambiar o limpiar");
             }
             else if (r_cha == 1)
             {
@@ -494,7 +494,7 @@ namespace Progra_IA_1
                     restart_flags();
                     restart_game_info();
                     clean_board();
-                    synthesizer.SpeakAsync("Luna dice que digas Iniciar para jugar de nuevo o Terminar para salir del juego");
+                    synthesizer.SpeakAsync("Laika quiere que digas Iniciar para jugar de nuevo o Terminar para salir del juego");
                 }
 
             }
@@ -623,9 +623,7 @@ namespace Progra_IA_1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-			this.AutoSize = true;
-			this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			Choices commands = new Choices();
+            Choices commands = new Choices();
             commands.Add(new string[] { "Iniciar", "Terminar", "Si", "No", "Limpiar", "Arriba", "Abajo", "Izquierda", "Derecha", "Listo", "Cambiar" });
             GrammarBuilder gBuilder = new GrammarBuilder();
             gBuilder.Culture = new System.Globalization.CultureInfo("es-ES");
@@ -635,7 +633,7 @@ namespace Progra_IA_1
             synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Child, 0, CultureInfo.GetCultureInfo("es-ES"));
             recognizer.LoadGrammarAsync(grammar); // put all together
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
-            synthesizer.SpeakAsync("Bienvenido a mi juego, yo soy Luna, tengo un dispositivo que me ayuda a comunicarme debajo de mi pañoleta, si quieres jugar tienes que decir Iniciar para jugar o Terminar para salir del juego");
+            synthesizer.SpeakAsync("Bienvenido al juego de Laika, Laika quiere que digas Iniciar para jugar o Terminar para salir del juego");
             restart_flags();
             recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
         }
@@ -650,9 +648,5 @@ namespace Progra_IA_1
 
         }
 
-		private void pictureBox1_Click(object sender, EventArgs e)
-		{
-
-		}
-	}
+    }
 }
