@@ -296,7 +296,8 @@ namespace Progra_IA_1
             board.ResumeLayout();
             board.AutoSize = true;
             board.Visible = true;
-        }
+			this.Size = new Size(n*a, m*a);
+		}
 
 
 

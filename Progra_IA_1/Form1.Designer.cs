@@ -38,21 +38,19 @@
 			// 
 			// board
 			// 
-			this.board.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.board.AutoScroll = true;
 			this.board.AutoSize = true;
 			this.board.ColumnCount = 1;
 			this.board.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.board.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.board.Location = new System.Drawing.Point(272, 201);
+			this.board.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.board.Location = new System.Drawing.Point(0, 0);
 			this.board.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
 			this.board.Name = "board";
 			this.board.RowCount = 1;
 			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.board.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 182F));
-			this.board.Size = new System.Drawing.Size(231, 267);
+			this.board.Size = new System.Drawing.Size(901, 750);
 			this.board.TabIndex = 0;
 			this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
 			// 
