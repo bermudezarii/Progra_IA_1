@@ -82,9 +82,9 @@ namespace Progra_IA_1
 
         private void center_panel()
         {
-            
            
-            
+          
+
         }
 
 
@@ -97,7 +97,7 @@ namespace Progra_IA_1
             flag_diag = false;
             tuple_list_obstacles = new List<Tuple<int, int>>();
             logic_board = new List<List<Node>>();
-           // center_panel();
+            center_panel();
         }
 
         private void restart_flags()
@@ -189,11 +189,7 @@ namespace Progra_IA_1
 
             Console.WriteLine("new point " + new_x.ToString() + " " + new_y.ToString() + " move: " + move);
             Node answer;
-            bool flag = true;
-            while (flag)
-            {
 
-            }
             if (new_x < n && new_y < m && new_x > -1 && new_y > -1) // ponerle los ceros 
             {
                 answer = logic_board[new_x][new_y];
@@ -515,7 +511,7 @@ namespace Progra_IA_1
             int size_path;
             try
             {
-                size_path = path.Count - 1;
+                size_path = path.Count;
             }
             catch (Exception ex)
             {
@@ -523,13 +519,14 @@ namespace Progra_IA_1
                 Console.WriteLine("No hay solucion");
                 synthesizer.SpeakAsync("No hay solucion");
             }
-            for (int i = 0; i < size_path; i++)
+            for (int i = 0; i < size_path-1; i++)
             {
                 
                 Node n = path.Pop();
                 this.board.GetControlFromPosition(n.Position_Y, n.Position_X).BackgroundImage = resize_image(Progra_IA_1.Properties.Resources.Bone_Path);
                 logic_board.ElementAt(n.Position_X).ElementAt(n.Position_Y).IsPath = true;
             }
+            path.Pop();
         }
 
         private bool assign_obstacle()
@@ -632,7 +629,7 @@ namespace Progra_IA_1
             gBuilder.Append(commands);
             Grammar grammar = new Grammar(gBuilder);
             recognizer.SetInputToDefaultAudioDevice(); //uses normal microfone
-            synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult, 0, CultureInfo.GetCultureInfo("es-ES"));
+            synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Child, 0, CultureInfo.GetCultureInfo("es-ES"));
             recognizer.LoadGrammarAsync(grammar); // put all together
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
             synthesizer.SpeakAsync("Bienvenido al juego de Laika, Laika quiere que digas Iniciar para jugar o Terminar para salir del juego");
