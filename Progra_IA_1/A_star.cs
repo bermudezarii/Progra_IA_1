@@ -90,6 +90,7 @@ namespace Progra_IA_1
                 close_list.Add(current);
                 Console.WriteLine("Iteration " + round + ": Node to evaluate = (" + current.Position_X + ", " + current.Position_Y + ")");
 
+                /* Verify if current is the final position */
                 if (current.Position_X == end.Position_X && current.Position_Y == end.Position_Y)
                 {
                     Node temp = current;
@@ -101,10 +102,12 @@ namespace Progra_IA_1
                     return path;
                 }
 
+                
                 adjacencies = Get_adjacent_nodes(current);
 
                 foreach(Node neighbor in adjacencies)
                 {
+                    /* Verify if neighbor isn't an object or if it is inside close_list*/
                     if(!neighbor.Traversable || close_list.Contains(neighbor))
                     {
                         continue;
@@ -114,6 +117,7 @@ namespace Progra_IA_1
                     {
                         neighbor.Parent = current;
 
+                        /* If includes diagonals*/
                         if(diagonal_flag)
                         {
                             neighbor.H_cost = Distance_diagonal(neighbor.Position_X, neighbor.Position_Y, end.Position_X, end.Position_Y);
