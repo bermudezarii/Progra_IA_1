@@ -228,11 +228,6 @@ namespace Progra_IA_1
         private double Distance_diagonal(int start_X, int start_Y, int end_X, int end_Y)
         {
             /* Formula: ((x2 - x1) ^ 2 + (y2 - y1) ^ 2) ^ (1/2) */
-            /*double max_distance = Math.Max(Math.Abs(start_X - end_X), Math.Abs(start_Y - end_Y));
-            double min_distance = Math.Min(Math.Abs(start_X - end_X), Math.Abs(start_Y - end_Y));
-
-            return hypotenuse * min_distance + square_size * (max_distance - min_distance);*/
-
             double dx = Math.Abs(start_X - end_X);
             double dy = Math.Abs(start_Y - end_Y);
 
