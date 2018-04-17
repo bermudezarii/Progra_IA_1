@@ -40,7 +40,7 @@ namespace Progra_IA_1
         // final point
         Node final_point;
         //percent of obstacles in the board
-        int perc_obst;
+        int perc_obst = 20;
         // flag if they want diagonals to work
         bool flag_diag;
         // points in matrix where there is an obstacle 
@@ -686,7 +686,7 @@ namespace Progra_IA_1
             synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Child, 0, CultureInfo.GetCultureInfo("es-ES"));
             recognizer.LoadGrammarAsync(grammar); // put all together
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
-            synthesizer.SpeakAsync("Bienvenido a mi juego, yo soy Laika, me comunico a traves de mi traductor canino debajo de mi pañoleta, te dejo con mi traductor, Laika quiere que para empezar diga Iniciar, para jugar, o Terminar para salir del juego");
+            synthesizer.SpeakAsync("Bienvenido a mi juego, yo soy Laika, estoy perdida, ayudame a volver a mi casa, me comunico a traves de mi traductor canino debajo de mi pañoleta, te dejo con mi traductor, Laika quiere que para empezar diga Iniciar, para jugar, o Terminar para salir del juego");
             restart_flags();
             this.Size = new Size(500, 500);
             recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_speech_recognized);
