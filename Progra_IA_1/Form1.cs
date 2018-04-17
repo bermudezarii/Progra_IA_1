@@ -571,6 +571,7 @@ namespace Progra_IA_1
         private bool assign_obstacle()
         {
             int number = rand.Next(100); // creates a number between 0 and 100
+			Console.WriteLine(number);
             if (number <= perc_obst)
                 return true;
             else
